@@ -1,0 +1,35 @@
+body {
+    font-family: 'poppins', 'Roboto', sans-serif;
+    /* Replace with your desired font family */
+}
+
+html,
+body * {
+    font-family: 'poppins', 'Roboto', sans-serif !important;
+    font-size: .92rem;
+}
+
+.link {
+  color: #1976D2;
+  text-decoration: none;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.link:hover {
+  color: #1976D2;
+  text-decoration: underline;
+}
+
+.task {
+    padding: 1px;
+    padding-right: 10px;
+    border-radius: 20px;
+    border: 1px solid #959595;
+}
+
+.task-details-box{
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+    align-items: flex-start;
+}
