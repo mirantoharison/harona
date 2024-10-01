@@ -1,0 +1,63 @@
+{
+  "reviewButton": { "selector": "button[jsaction*='reviewChart.moreReviews']", "label": "Selecteur pour le bouton d'affichage des avis"},
+  "reviewSort": { "selector": "[aria-label='Sort reviews'], [aria-label='Most relevant']" },
+  "reviewSortByNewest": { "selector": "#action-menu [role='menuitemradio'][data-index='1']" },
+  "reviewLoading": { "selector": "[role=main] > :last-child > :last-child", "html": true, "return": false },
+  "reviewBlock": {
+    "selector": "[role=main] div[data-review-id][jslog][aria-label]:not([role=presentation])",
+    "array": true
+  },
+  "companyInfo": {
+    "title": { "selector": "[role=main] > :nth-child(2) h1:last-child", "text": true },
+    "businessType": { "selector": "[role=main] > :nth-child(2) [jsaction$=category]", "text": true },
+    "description": { "selector": "[aria-label^=About][role=region]", "text": true },
+    "address": { "selector": "[data-item-id=address]", "trimText": ":" },
+    "website": { "selector": "[data-item-id=authority]", "attrText": "href" },
+    "openHours": { "selector": "[jsaction^='pane.openhours']", "trimText": ";" },
+    "phone": { "selector": "[data-item-id^=phone]", "trimText": ":" },
+    "plusCode": { "selector": "[data-item-id=oloc]", "trimText": ":" },
+    "reviewCount": {
+      "selector": "[jsaction='pane.reviewChart.moreReviews'] button[jsaction$='.reviewChart.moreReviews']",
+      "text": true,
+      "firstNumber": true
+    },
+    "averageReview": {
+      "selector": "[jsaction='pane.reviewChart.moreReviews'] .fontDisplayLarge",
+      "text": true,
+      "firstNumber": true
+    },
+    "ratings": {
+      "selector": "[jsaction='pane.reviewChart.moreReviews'] table tbody tr",
+      "array": true,
+      "attrText": "aria-label",
+      "json": true
+    }
+  },
+  "review": {
+    "reviewerLink": {
+      "selector": "button[jsaction$='.review.reviewerLink']:has(div)",
+      "attrText": "data-href"
+    },
+    "reviewerName": { "selector": "button[jsaction$='.review.reviewerLink']:has(div) div:first-child", "text": true },
+    "reviewerStar": {
+      "selector": "div[jsaction$='.review.out'] > div > :last-child > :first-child > :first-child",
+      "$or": { "text": true, "attrText": "aria-label" },
+      "firstNumber": true
+    },
+    "reviewDateText": {
+      "selector": "div[jsaction$='.review.out'] > div > :last-child span::-p-text(ago)",
+      "text": true
+    },
+    "reviewerReviewsCount": {
+      "selector": "button[jsaction$='.review.reviewerLink']:has(div) div:first-child + div",
+      "text": true,
+      "firstNumber": true
+    },
+    "reviewerVisitedDate": {
+      "selector": "div[jsaction$='.review.out'] > div > :last-child div::-p-text(Visited)",
+      "text": true
+    },
+    "reviewNote": { "selector": "div[jsaction$='.review.out'] > div > :last-child > :nth-child(2)", "text": true },
+    "seeMore": { "selector": "[aria-label='See more']:not([data-href])" }
+  }
+}

@@ -6,7 +6,7 @@ body {
 html,
 body * {
     font-family: 'poppins', 'Roboto', sans-serif !important;
-    font-size: .92rem;
+    font-size: .9rem;
 }
 
 .link {
@@ -27,9 +27,54 @@ body * {
     border: 1px solid #959595;
 }
 
+.task-details-section{
+  padding: 25px 15px;
+}
+
 .task-details-box{
     display: flex;
     flex-direction: row;
     column-gap: 10px;
     align-items: flex-start;
+}
+
+.star-container{
+  border-radius: 5px;
+  padding: 1px 4px;
+  padding-right: 8px;
+}
+
+.star-container.star-5{
+  background-color: #7b1fa2;
+}
+
+.star-container.star-4{
+  background-color: #ad3ade;
+}
+
+.star-container.star-3{
+  background-color: #c79ada;
+}
+
+.star-container.star-2{
+  background-color: #FDB800;
+}
+
+.star-container.star-1{
+  background-color: #E64900;
+}
+
+.star-container *{
+  color: #f5f5f5;
+}
+
+.star-container p{
+  font-size: .8rem !important;
+}
+
+.review-star-box{
+  height: 10px;
+  width: 200px;
+  background: linear-gradient(to right, #9614ca, #b248dc);
+  border-radius: 10px;
 }

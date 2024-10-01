@@ -29,9 +29,14 @@ import {
   BlogPostList,
   BlogPostShow,
 } from "./pages/jobs";
+import {
+  SelectorConfigList
+} from "./pages/configuration";
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
+
+import { Settings } from "@mui/icons-material";
 
 function App() {
   return (
@@ -59,6 +64,17 @@ function App() {
                       canDelete: true,
                     },
                   },
+                  {
+                    name: "Configuration",
+                    list: "/selector/list",
+                    create: "/selector/add",
+                    edit: "/selector/update/:id",
+                    show: "/selector/details/:id",
+                    icon: (<Settings />),
+                    meta: {
+                      canDelete: true,
+                    },
+                  }
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -86,6 +102,12 @@ function App() {
                       <Route path="/jobs/update/:id" element={<BlogPostEdit />} />
                       <Route path="/jobs/details/:id" element={<BlogPostShow />} />
                     </Route>
+                    <Route path="/selector">
+                      <Route index path="/selector/list" element={<SelectorConfigList />} />
+                      <Route path="/selector/update/:id" element={<></>} />
+                      <Route path="/selector/details/:id" element={<></>} />
+                    </Route>
+                    SelectorConfigList
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
                   <Route
