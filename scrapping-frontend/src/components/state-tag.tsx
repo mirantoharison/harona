@@ -23,7 +23,7 @@ export const StateCell: React.FC<{ row: { state: string } }> = ({ row }) => {
         display: 'flex', alignItems: 'center',
         padding: "1px",
         paddingRight: "10px",
-        borderRadius: "20px",
+        borderRadius: "4px",
         border: "1px solid #959595",
         width: "fit-content"
       }}>

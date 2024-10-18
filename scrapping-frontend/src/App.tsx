@@ -30,8 +30,10 @@ import {
   BlogPostShow,
 } from "./pages/jobs";
 import {
-  SelectorConfigList
-} from "./pages/configuration";
+  SelectorConfigList,
+  SelectorShow,
+  SelectorAdd
+} from "./pages/selector";
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
@@ -65,7 +67,7 @@ function App() {
                     },
                   },
                   {
-                    name: "Configuration",
+                    name: "Selecteur",
                     list: "/selector/list",
                     create: "/selector/add",
                     edit: "/selector/update/:id",
@@ -104,8 +106,8 @@ function App() {
                     </Route>
                     <Route path="/selector">
                       <Route index path="/selector/list" element={<SelectorConfigList />} />
-                      <Route path="/selector/update/:id" element={<></>} />
-                      <Route path="/selector/details/:id" element={<></>} />
+                      <Route path="/selector/add" element={<SelectorAdd />} />
+                      <Route path="/selector/details/:id" element={<SelectorShow />} />
                     </Route>
                     SelectorConfigList
                     <Route path="*" element={<ErrorComponent />} />

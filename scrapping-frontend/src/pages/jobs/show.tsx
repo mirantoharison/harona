@@ -285,7 +285,7 @@ export const BlogPostShow = () => {
                     }}
                     style={{ alignItems: "center" }} />
                 </Grid>
-                <Grid sx={{
+                <Grid item sx={{
                   display: "flex",
                   columnGap: "45px",
                   alignItems: "center"

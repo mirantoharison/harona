@@ -1,63 +1,179 @@
-{
-  "reviewButton": { "selector": "button[jsaction*='reviewChart.moreReviews']", "label": "Selecteur pour le bouton d'affichage des avis"},
-  "reviewSort": { "selector": "[aria-label='Sort reviews'], [aria-label='Most relevant']" },
-  "reviewSortByNewest": { "selector": "#action-menu [role='menuitemradio'][data-index='1']" },
-  "reviewLoading": { "selector": "[role=main] > :last-child > :last-child", "html": true, "return": false },
-  "reviewBlock": {
-    "selector": "[role=main] div[data-review-id][jslog][aria-label]:not([role=presentation])",
-    "array": true
-  },
-  "companyInfo": {
-    "title": { "selector": "[role=main] > :nth-child(2) h1:last-child", "text": true },
-    "businessType": { "selector": "[role=main] > :nth-child(2) [jsaction$=category]", "text": true },
-    "description": { "selector": "[aria-label^=About][role=region]", "text": true },
-    "address": { "selector": "[data-item-id=address]", "trimText": ":" },
-    "website": { "selector": "[data-item-id=authority]", "attrText": "href" },
-    "openHours": { "selector": "[jsaction^='pane.openhours']", "trimText": ";" },
-    "phone": { "selector": "[data-item-id^=phone]", "trimText": ":" },
-    "plusCode": { "selector": "[data-item-id=oloc]", "trimText": ":" },
-    "reviewCount": {
-      "selector": "[jsaction='pane.reviewChart.moreReviews'] button[jsaction$='.reviewChart.moreReviews']",
-      "text": true,
-      "firstNumber": true
+[
+    {
+        "name": "reviewLoading",
+        "selector": "[role=main] > :last-child > :last-child",
+        "html": true,
+        "return": false,
+        "_id": "1srIB0M2naZpL6iXV",
+        "description": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."
     },
-    "averageReview": {
-      "selector": "[jsaction='pane.reviewChart.moreReviews'] .fontDisplayLarge",
-      "text": true,
-      "firstNumber": true
+    {
+        "name": "reviewNote",
+        "selector": "div[jsaction$='.review.out'] > div > :last-child > :nth-child(2)",
+        "parentId": "4IrIB0M2naZOL6iJ",
+        "text": true,
+        "_id": "4IrIB052naZOL6iXV"
     },
-    "ratings": {
-      "selector": "[jsaction='pane.reviewChart.moreReviews'] table tbody tr",
-      "array": true,
-      "attrText": "aria-label",
-      "json": true
+    {
+        "name": "reviewDateText",
+        "selector": "div[jsaction$='.review.out'] > div > :last-child span::-p-text(ago)",
+        "parentId": "4IrIB0M2naZOL6iJ",
+        "text": true,
+        "_id": "4IrIB092naZOL6iXV"
+    },
+    {
+        "name": "reviewerStar",
+        "selector": "div[jsaction$='.review.out'] > div > :last-child > :first-child > :first-child",
+        "parentId": "4IrIB0M2naZOL6iJ",
+        "attrText": "aria-label",
+        "_id": "4IrIB0M2UaZOL6iXV"
+    },
+    {
+        "name": "reviewerLink",
+        "selector": "button[jsaction$='.review.reviewerLink']:has(div)",
+        "parentId": "4IrIB0M2naZOL6iJ",
+        "attrText": "data-href",
+        "_id": "4IrIB0M2kaZOL6iXV"
+    },
+    {
+        "name": "phone",
+        "selector": "[data-item-id^=phone]",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M2naZOA6iXr"
+    },
+    {
+        "name": "reviewBlock",
+        "selector": "[role=main] div[data-review-id][jslog][aria-label]:not([role=presentation])",
+        "parentId": "4IrIB0M2naZOt6iXrk",
+        "array": true,
+        "_id": "4IrIB0M2naZOL6iJ",
+        "description": "Cras lacus ligula, porta quis nisl nec, cursus finibus libero. Maecenas id varius orci. Proin hendrerit nisi nec nunc gravida, at aliquet nibh scelerisque. Quisque ut tristique justo, quis dapibus tellus. Aliquam consectetur sollicitudin faucibus. Mauris luctus dictum massa, sed rutrum magna mollis ut. Pellentesque imperdiet, purus nec pulvinar ultricies, ante lacus tempus ante, et fringilla felis sapien sed nibh. Phasellus bibendum est eu massa laoreet condimentum. Duis placerat ante sit amet tellus maximus aliquam. Aliquam vulputate convallis arcu, vel pulvinar tellus pretium vitae."
+    },
+    {
+        "name": "reviewerReviewsCount",
+        "selector": "button[jsaction$='.review.reviewerLink']:has(div) div:first-child + div",
+        "parentId": "4IrIB0M2naZOL6iJ",
+        "text": true,
+        "_id": "4IrIB0M2naZOL6iX"
+    },
+    {
+        "name": "reviewerName",
+        "selector": "button[jsaction$='.review.reviewerLink']:has(div) div:first-child",
+        "parentId": "4IrIB0M2naZOL6iJ",
+        "text": true,
+        "_id": "4IrIB0M2naZOL6iXV"
+    },
+    {
+        "name": "companyInfo",
+        "_id": "4IrIB0M2naZOL6iXrk",
+        "group": true
+    },
+    {
+        "name": "openHours",
+        "selector": "[jsaction^='pane.openhours']",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M2naZOa6iXr"
+    },
+    {
+        "name": "description",
+        "selector": "[aria-label^=About][role=region]",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M2naZOm6iXr"
+    },
+    {
+        "name": "address",
+        "selector": "[data-item-id=address]",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M2naZOt6iXr"
+    },
+    {
+        "name": "review",
+        "_id": "4IrIB0M2naZOt6iXrk",
+        "group": true
+    },
+    {
+        "name": "website",
+        "selector": "[data-item-id=authority]",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M2naZOz6iXr"
+    },
+    {
+        "name": "reviewCount",
+        "selector": "[jsaction='pane.reviewChart.moreReviews'] button[jsaction$='.reviewChart.moreReviews']",
+        "parentId": "4IrIB0M2naZoL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M2naZaA6iXr"
+    },
+    {
+        "name": "averageReview",
+        "selector": "[jsaction='pane.reviewChart.moreReviews'] .fontDisplayLarge",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M2naZeA6iXr"
+    },
+    {
+        "name": "plusCode",
+        "selector": "[data-item-id=oloc]",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M2naZoA6iXr"
+    },
+    {
+        "name": "businessType",
+        "selector": "[role=main] > :nth-child(2) [jsaction$=category]",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "text": true,
+        "_id": "4IrIB0M3naZOL6iXr"
+    },
+    {
+        "name": "ratings",
+        "selector": "[jsaction='pane.reviewChart.moreReviews'] table tbody tr",
+        "parentId": "4IrIB0M2naZOL6iXrk",
+        "array": true,
+        "attrText": "aria-label",
+        "_id": "4IrIa0M2naZeA6iXr"
+    },
+    {
+        "name": "reviewerReviewsCount",
+        "selector": "button[jsaction$='.review.reviewerLink']:has(div) div:first-child + div",
+        "parentId": "4IrIB0M2naZOL6iJ",
+        "text": true,
+        "_id": "4srIB0M2naZOL6iXV"
+    },
+    {
+        "name": "reviewSortByNewest",
+        "selector": "#action-menu [role='menuitemradio'][data-index='1']",
+        "return": false,
+        "_id": "4srIB0M2naZmL6iXV"
+    },
+    {
+        "name": "reviewButton",
+        "selector": "button[jsaction*='reviewChart.moreReviews']",
+        "return": false,
+        "_id": "4srIB0M2naZpL6iXV"
+    },
+    {
+        "name": "reviewSortButton",
+        "selector": "[aria-label='Sort reviews'], [aria-label='Most relevant']",
+        "return": false,
+        "_id": "4srIBeM2naZpL6iXV"
+    },
+    {
+        "name": "seeMoreLink",
+        "selector": "[aria-label='See more']:not([data-href])",
+        "array": true,
+        "return": false,
+        "_id": "4srIBeM2naZpo6iXV"
+    },
+    {
+        "name": "about_button",
+        "selector": "button[aria-label^=About]",
+        "displayName": "About button",
+        "_id": "jSJFAhMmZddu43wY"
     }
-  },
-  "review": {
-    "reviewerLink": {
-      "selector": "button[jsaction$='.review.reviewerLink']:has(div)",
-      "attrText": "data-href"
-    },
-    "reviewerName": { "selector": "button[jsaction$='.review.reviewerLink']:has(div) div:first-child", "text": true },
-    "reviewerStar": {
-      "selector": "div[jsaction$='.review.out'] > div > :last-child > :first-child > :first-child",
-      "$or": { "text": true, "attrText": "aria-label" },
-      "firstNumber": true
-    },
-    "reviewDateText": {
-      "selector": "div[jsaction$='.review.out'] > div > :last-child span::-p-text(ago)",
-      "text": true
-    },
-    "reviewerReviewsCount": {
-      "selector": "button[jsaction$='.review.reviewerLink']:has(div) div:first-child + div",
-      "text": true,
-      "firstNumber": true
-    },
-    "reviewerVisitedDate": {
-      "selector": "div[jsaction$='.review.out'] > div > :last-child div::-p-text(Visited)",
-      "text": true
-    },
-    "reviewNote": { "selector": "div[jsaction$='.review.out'] > div > :last-child > :nth-child(2)", "text": true },
-    "seeMore": { "selector": "[aria-label='See more']:not([data-href])" }
-  }
-}
+]
