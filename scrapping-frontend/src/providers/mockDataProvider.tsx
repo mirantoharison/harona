@@ -8,7 +8,6 @@ export const dataProvider: DataProvider = {
 
     if (response.status < 200 || response.status > 299) throw response;
 
-    console.log(response)
     const data = await response.json();
 
     return { data };
@@ -33,17 +32,34 @@ export const dataProvider: DataProvider = {
     const current = pagination?.current ?? 1;
     const pageSize = pagination?.pageSize ?? 10;
 
+    params.append("page", String(current));
+    params.append("offset", String(pageSize));
+    for (const filter of filters || []) {
+      params.append(filter?.field, filter?.value);
+    }
+    for (const sorter of sorters || []) {
+      params.append("sort_field", sorter.field);
+      params.append("sort_order", sorter.order);
+    }
     const response = await fetch(`${API_URL}/${resource}/list?${params.toString()}`);
 
     if (response.status < 200 || response.status > 299) throw response;
 
-    const data = await response.json();
-    console.log(data);
+    const responseData = await response.json();
 
-    return {
-      data,
-      total: 0, // We'll cover this in the next steps.
-    };
+    if (current !== undefined && pageSize !== undefined) {
+      const { body, metadata } = responseData ?? { body: [], metadata: {} };
+
+      return {
+        data: body,
+        total: metadata?.total,
+        page: metadata?.page,
+        hasNextPage: metadata?.hasNextPage
+      };
+    }
+    else {
+      return { data: responseData, total: 0, page: 0, hasNextPage: false };
+    }
   },
   create: async ({ resource, variables }) => {
     const response = await fetch(`${API_URL}/${resource}/add`, {
@@ -62,4 +78,7 @@ export const dataProvider: DataProvider = {
       data,
     };
   },
+  deleteOne: async () => {
+
+  }
 };

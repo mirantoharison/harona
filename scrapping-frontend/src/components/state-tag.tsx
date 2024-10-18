@@ -3,7 +3,7 @@ import { CheckCircle, Cancel, HelpOutline } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 
 const _stateIcons: { [key: string]: React.ReactNode } = {
-  completed: <CheckCircle sx={{ color: '#049400', marginRight: .3, scale: .8 }} />,
+  completed: <CheckCircle sx={{ color: '#7b1fa2', marginRight: .3, scale: .8 }} />,
   failed: <Cancel sx={{ color: '#D90000', marginRight: .3, scale: .8 }} />,
   unknown: <HelpOutline sx={{ color: 'white', marginRight: .3, scale: .8 }} />,
 };
@@ -23,8 +23,9 @@ export const StateCell: React.FC<{ row: { state: string } }> = ({ row }) => {
         display: 'flex', alignItems: 'center',
         padding: "1px",
         paddingRight: "10px",
-        borderRadius: "20px",
+        borderRadius: "4px",
         border: "1px solid #959595",
+        width: "fit-content"
       }}>
       {icon}
       <Typography variant="body2">{text}</Typography>
