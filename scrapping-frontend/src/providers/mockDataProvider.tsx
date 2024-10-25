@@ -1,8 +1,9 @@
-import type { DataProvider } from "@refinedev/core";
+import type { BaseRecord, CrudFilter, DataProvider, DeleteOneResponse } from "@refinedev/core";
 
 const API_URL = "http://localhost:3000";
 
 export const dataProvider: DataProvider = {
+  getApiUrl: () => API_URL,
   getOne: async ({ resource, id, meta }) => {
     const response = await fetch(`${API_URL}/${resource}/details/${id}`);
 
@@ -34,8 +35,8 @@ export const dataProvider: DataProvider = {
 
     params.append("page", String(current));
     params.append("offset", String(pageSize));
-    for (const filter of filters || []) {
-      params.append(filter?.field, filter?.value);
+    for (let filter of (filters as Array<{ field: string; value: any }>) || []) {
+      params.append(filter.field, filter.value);
     }
     for (const sorter of sorters || []) {
       params.append("sort_field", sorter.field);
@@ -80,7 +81,15 @@ export const dataProvider: DataProvider = {
       data,
     };
   },
-  deleteOne: async () => {
+  deleteOne: async ({ resource, id }) => {
+    const response = await fetch(`${API_URL}/${resource}/delete/${id}`, {
+      method: "DELETE",
+    });
 
+    if (response.status < 200 || response.status > 299) throw response;
+
+    const data = await response.json();
+
+    return { data };
   }
 };
