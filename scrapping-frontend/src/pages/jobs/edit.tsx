@@ -1,124 +1,166 @@
-import { Autocomplete, Box, Select, TextField } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { Edit, useAutocomplete } from "@refinedev/mui";
+import { useEffect, useState } from "react";
+import { useParsed } from "@refinedev/core";
+import { DeleteButton, Edit, ListButton, RefreshButton, SaveButton } from "@refinedev/mui";
+import { Typography, Button, Grid, TextField } from "@mui/material";
 import { useForm } from "@refinedev/react-hook-form";
-import { Controller } from "react-hook-form";
+import { type HttpError, useNavigation, useTranslation } from "@refinedev/core";
 
-export const BlogPostEdit = () => {
+interface JobProps {
+  name: string;
+  data: { url: string };
+  comments?: string;
+  timestamp: string;
+  processedOn?: string;
+}
+
+interface JobDetailsProps {
+  job: JobProps;
+}
+
+export const JobEdit = () => {
+  const [data, setData] = useState<null | JobDetailsProps>(null);
+  const { translate } = useTranslation();
+  const { push } = useNavigation();
+  const { id } = useParsed();
+
   const {
-    saveButtonProps,
-    refineCore: { queryResult, formLoading },
+    refineCore: { query, formLoading, onFinish },
+    handleSubmit,
     register,
-    control,
     formState: { errors },
-  } = useForm({});
-
-  const blogPostsData = queryResult?.data?.data;
-
-  const { autocompleteProps: categoryAutocompleteProps } = useAutocomplete({
-    resource: "categories",
-    defaultValue: blogPostsData?.category?.id,
+    setValue,
+  } = useForm<JobDetailsProps, HttpError, JobProps>({
+    refineCoreProps: {
+      resource: "jobs",
+      action: "edit",
+      id: id,
+      onMutationError(error) {
+        console.error("An error occurred:", error);
+      },
+      onMutationSuccess() {
+        setTimeout(() => {
+          push("/jobs/list");
+        }, 3000)
+      },
+    },
   });
 
+  const cancel = () => {
+    push("/jobs/list");
+  }
+
+  useEffect(() => {
+    const task = query?.data?.data;
+    if (task) {
+      const formFields = ["data", "name", "comments"];
+      formFields.forEach((field) => {
+        const typedKey = field as keyof JobProps;
+        setValue(typedKey, task.job[typedKey]);
+      });
+      setData(task);
+    }
+  }, [query, setValue]);
+
   return (
-    <Edit isLoading={formLoading} saveButtonProps={saveButtonProps}>
-      <Box
+    <Edit
+      isLoading={formLoading}
+      headerProps={{
+        title: (<Typography variant="h4">{translate("pages.jobs.edit.title", { id })}</Typography>)
+      }}
+      headerButtons={({ listButtonProps, refreshButtonProps }) => (
+        <>
+          <ListButton {...listButtonProps}>{translate("pages.jobs.edit.headerButtons.list")}</ListButton>
+          <RefreshButton {...refreshButtonProps} onClick={() => query?.refetch()}>{translate("pages.jobs.edit.headerButtons.refresh")}</RefreshButton>
+          <DeleteButton recordItemId={id}>{translate("pages.jobs.edit.headerButtons.delete")}</DeleteButton>
+        </>
+      )}
+      footerButtons={({ saveButtonProps }) => (
+        <>
+          <SaveButton {...saveButtonProps} children={translate("pages.jobs.edit.footerButtons.save")} variant="contained" color="primary"></SaveButton>
+          <Button color="error" variant="contained" onClick={cancel}>{translate("pages.jobs.edit.footerButtons.cancel")}</Button>
+        </>
+      )
+      }
+    >
+      <Grid
+        container
+        spacing={2}
         component="form"
-        sx={{ display: "flex", flexDirection: "column" }}
         autoComplete="off"
+        onSubmit={handleSubmit(onFinish)}
       >
-        <TextField
-          {...register("title", {
-            required: "This field is required",
-          })}
-          error={!!(errors as any)?.title}
-          helperText={(errors as any)?.title?.message}
-          margin="normal"
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          type="text"
-          label={"Title"}
-          name="title"
-        />
-        <TextField
-          {...register("content", {
-            required: "This field is required",
-          })}
-          error={!!(errors as any)?.content}
-          helperText={(errors as any)?.content?.message}
-          margin="normal"
-          fullWidth
-          InputLabelProps={{ shrink: true }}
-          multiline
-          label={"Content"}
-          name="content"
-          rows={4}
-        />
-        <Controller
-          control={control}
-          name={"category.id"}
-          rules={{ required: "This field is required" }}
-          // eslint-disable-next-line
-          defaultValue={null as any}
-          render={({ field }) => (
-            <Autocomplete
-              {...categoryAutocompleteProps}
-              {...field}
-              onChange={(_, value) => {
-                field.onChange(value.id);
-              }}
-              getOptionLabel={(item) => {
-                return (
-                  categoryAutocompleteProps?.options?.find((p) => {
-                    const itemId =
-                      typeof item === "object"
-                        ? item?.id?.toString()
-                        : item?.toString();
-                    const pId = p?.id?.toString();
-                    return itemId === pId;
-                  })?.title ?? ""
-                );
-              }}
-              isOptionEqualToValue={(option, value) => {
-                const optionId = option?.id?.toString();
-                const valueId =
-                  typeof value === "object"
-                    ? value?.id?.toString()
-                    : value?.toString();
-                return value === undefined || optionId === valueId;
-              }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={"Category"}
-                  margin="normal"
-                  variant="outlined"
-                  error={!!(errors as any)?.category?.id}
-                  helperText={(errors as any)?.category?.id?.message}
-                  required
-                />
-              )}
-            />
-          )}
-        />
-        <Controller
-          name="status"
-          control={control}
-          render={({ field }) => {
-            return (
-              <Select
-                {...field}
-                value={field?.value || "draft"}
-                label={"Status"}
-              >
-                <MenuItem value="draft">Draft</MenuItem>
-                <MenuItem value="published">Published</MenuItem>
-                <MenuItem value="rejected">Rejected</MenuItem>
-              </Select>
-            );
-          }}
-        />
-      </Box>
-    </Edit>
-  );
-};
+        <Grid item sm={12} md={6}>
+          <TextField
+            {...register("name", {
+              required: translate("input.required"),
+            })}
+            variant="standard"
+            error={!!errors?.name}
+            helperText={<>{errors?.name?.message}</>}
+            margin="normal"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            type="text"
+            label={translate("pages.jobs.create.nameInputLabel")}
+            name="name"
+            className="custom-input"
+          />
+          <TextField
+            {...register("data.url", { required: true })}
+            variant="standard"
+            error={!!errors?.data?.url}
+            helperText={<>{errors?.data?.url?.message ?? ""}</>}
+            margin="normal"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            type="text"
+            label={translate("pages.jobs.create.urlInputLabel")}
+            name="url"
+            className="custom-input"
+          />
+          <TextField
+            variant="standard"
+            margin="normal"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            type="text"
+            label={translate("pages.jobs.create.createdOn")}
+            name="timestamp"
+            className="custom-input"
+            InputProps={{ readOnly: true }}
+            value={data?.job?.timestamp ?? ""}
+          />
+          <TextField
+            variant="standard"
+            margin="normal"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            type="text"
+            label={translate("pages.jobs.create.processedOn")}
+            name="processedOn"
+            className="custom-input"
+            InputProps={{ readOnly: true }}
+            value={data?.job?.processedOn ?? ""}
+          />
+        </Grid>
+        <Grid item sm={12} md={6}>
+          <TextField
+            {...register("comments")}
+            variant="standard"
+            error={!!errors?.comments}
+            helperText={<>{errors?.comments?.message}</>}
+            margin="normal"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            type="text"
+            label={translate("pages.jobs.create.commentInputLabel")}
+            name="comments"
+            className="custom-input"
+            multiline={true}
+            placeholder={translate("pages.jobs.create.commentInputPlaceholder")}
+          />
+        </Grid>
+      </Grid>
+    </Edit >
+  )
+}

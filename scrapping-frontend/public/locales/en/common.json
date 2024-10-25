@@ -1,0 +1,368 @@
+{
+  "pages": {
+    "login": {
+      "title": "Log into your account",
+      "signin": "Sign in",
+      "signup": "Sign up",
+      "divider": "or",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "validEmail": "Invalid email",
+        "requiredEmail": "Email is required",
+        "requiredPassword": "Password is required"
+      },
+      "buttons": {
+        "submit": "Log in",
+        "forgotPassword": "Forgot password?",
+        "noAccount": "Does not have an account yet?",
+        "rememberMe": "Remember me"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "fields": {
+        "email": "Email"
+      },
+      "errors": {
+        "validEmail": "Invalid email address",
+        "requiredEmail": "Email is required"
+      },
+      "buttons": {
+        "submit": "Send reset instructions"
+      }
+    },
+    "register": {
+      "title": "Sign up for your account",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "validEmail": "Invalid email address",
+        "requiredEmail": "Email is required",
+        "requiredPassword": "Password is required"
+      },
+      "buttons": {
+        "submit": "Register",
+        "haveAccount": "Have an account?"
+      }
+    },
+    "updatePassword": {
+      "title": "Update password",
+      "fields": {
+        "password": "New Password",
+        "confirmPassword": "Confirm new password"
+      },
+      "errors": {
+        "confirmPasswordNotMatch": "Passwords do not match",
+        "requiredPassword": "Password required",
+        "requiredConfirmPassword": "Confirm password is required"
+      },
+      "buttons": {
+        "submit": "Update"
+      }
+    },
+    "error": {
+      "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
+      "404": "Sorry, the page you visited does not exist.",
+      "resource404": "Are you sure you have created the {{resource}} resource.",
+      "backHome": "Back Home"
+    },
+    "jobs": {
+      "list": {
+        "title": "List of saved task",
+        "addNewTask": "Add new task",
+        "loadingTaskList": "Loading task list...",
+        "loadingTaskListMessage": "We are in the process of finding the list of tasks that have been created on the platform. Please wait a moment.",
+        "headerSortInputLabel": "Sort the results...",
+        "headerSortField": {
+          "id": "ID",
+          "name": "Name",
+          "state": "Status",
+          "processedOn": "Processing date",
+          "finishedOn": "End date",
+          "totalReviews": "Total number of reviews",
+          "countReviewsScrapped": "Number of reviews scraped"
+        },
+        "headerSortOrderInputLabel": "In order...",
+        "headerSortOrder": {
+          "ascending": "Ascending",
+          "descending": "Descending"
+        },
+        "headerSearchInputLabel": "Search for a task...",
+        "headerSearchButton": "Search",
+        "footerElementsCount": "Elements {{from}}-{{to}} of {{total}}",
+        "footerElementsShowCount": "Show items by:",
+        "taskCard": {
+          "state": {
+            "completed": "Completed",
+            "failed": "Failed",
+            "unknown": "Not defined"
+          },
+          "startedAt": "Started on: {{value}}",
+          "finishedAt": "Finished on: {{value}}",
+          "reviewsTotal": "Total review: {{value}}",
+          "reviewsScraped": "Scraped reviews: {{value}}"
+        }
+      },
+      "show": {
+        "title": "Details about task {{id}}",
+        "headerButtons": {
+          "listTooltip": "Return to task list",
+          "list": "Task List",
+          "editTooltip": "Edit",
+          "deleteTooltip": "Delete",
+          "launch": "Run"
+        },
+        "tab": {
+          "general": {
+            "title": "General information",
+            "id": "Task ID",
+            "name": "Parent queue name",
+            "url": "Task-related URL",
+            "state": "State",
+            "createdOn": "Creation date",
+            "processedOn": "Processing date",
+            "finishedOn": "Ended on",
+            "reviewTotal": "Total number of reviews available",
+            "reviewCollected": "Number of reviews retrieved",
+            "comment": "Comment"
+          },
+          "details": {
+            "title": "Page Details",
+            "name": "Page name",
+            "type": "Type of activity",
+            "address": "Address",
+            "plusCode": "Plus code",
+            "website": "Website",
+            "phone": "Phone number",
+            "averageRate": "Average review score",
+            "averageRateStarText": "{{average}} star"
+          },
+          "reviews": {
+            "title": "Reviews collected",
+            "reviewCard": {
+              "postedOn": "published on {{date}}",
+              "noReview": "No reviews written by user",
+              "reviewLinkRedirection": "Click here to view the review in a new tab",
+              "reviewSomeNote": "Hide part of the review",
+              "reviewFullNote": "See the full review"
+            }
+          }
+        },
+        "footerElementsCount": "Elements {{from}}-{{to}} of {{total}}",
+        "footerElementsShowCount": "Show items by:"
+      },
+      "create": {
+        "title": "Create a new task",
+        "nameInputLabel": "Parent queue name",
+        "urlInputLabel": "URL of the page to scrape",
+        "commentInputLabel": "Comment",
+        "commentInputPlaceholder": "You can add a short comment regarding this task",
+        "createdOn": "Task creation date",
+        "processedOn": "Last attempt",
+        "headerButtons": {
+          "list": "Task List"
+        },
+        "footerButtons": {
+          "save": "Save task",
+          "cancel": "Cancel"
+        }
+      },
+      "edit": {
+        "title": "Edit task {{id}}",
+        "headerButtons": {
+          "list": "Task list",
+          "refresh": "Refresh",
+          "delete": "Delete"
+        },
+        "footerButtons": {
+          "save": "Save changes",
+          "cancel": "Cancel"
+        }
+      }
+    },
+    "selectors": {
+      "list": {
+        "title": "List of selectors saved in the database",
+        "headerButtons": {
+          "refresh": "Refresh the list",
+          "create": "Add a new item"
+        },
+        "selectorCard": {
+          "fullDescription": "Show full description",
+          "someDescription": "Hide part of the description",
+          "deleteConfirmTitle": "Are you sure you want to delete the selector: {{id}}?",
+          "deleteCancelText": "Cancel",
+          "deleteOkText": "Yes, delete"
+        },
+        "headerFilterText": "Filter the result",
+        "headerFilter": {
+          "id": "ID",
+          "name": "Name"
+        },
+        "loadingSelectorList": "Loading the list of selectors...",
+        "loadingSelectorListMessage": "We are in the process of finding the list of selectors that were created on the platform. Please wait a moment.",
+        "headerSearchInputLabel": "Search for a selector or group...",
+        "headerSearchInputButton": "Search",
+        "headerSortInputLabel": "Sort the results ...",
+        "headerSortOrderInputLabel": "In order...",
+        "headerSortOrder": {
+          "ascending": "Ascending",
+          "descending": "Descending"
+        },
+        "footerElementsCount": "Elements {{from}}-{{to}} of {{total}}",
+        "footerElementsShowCount": "Show items by:"
+      },
+      "create": {
+        "title": "Create a new selector",
+        "headerButtons": {
+          "list": "List of selectors"
+        },
+        "footerButtons": {
+          "save": "Save selector",
+          "cancel": "Cancel"
+        },
+        "nameFieldInputLabel": "Name",
+        "displayNameFieldInputLabel": "Display name",
+        "selectorInputFieldLabel": "Selector",
+        "descriptionInputFieldLabel": "Description",
+        "descriptionInputFieldPlaceholder": "You can enter a small description of the selector here.",
+        "attributeInputFieldLabel": "Select an attribute for the selector...",
+        "attributeDelimiterInputFieldLabel": "Delimitation...",
+        "addAttributeButton": "Add a new attribute"
+      },
+      "edit": {
+        "title": "Edit selector {{id}}",
+        "headerButtons": {
+          "list": "List of selectors",
+          "refresh": "Refresh"
+        },
+        "footerButtons": {
+          "save": "Save changes",
+          "delete": "Delete"
+        },
+        "deleteTitle": "Are you sure you want to delete the selector: {{id}}?",
+        "deleteOkButton": "Yes, delete",
+        "deleteCancelButton": "Cancel"
+      },
+      "show": {
+        "title": "Details regarding the selector {{id}}",
+        "headerButtons": {
+          "refresh": "Refresh",
+          "refreshTooltip": "",
+          "list": "List of selectors",
+          "listTooltip": "Click here to return to the list of selectors",
+          "edit": "Edit",
+          "editTooltip": "Edit",
+          "delete": "Delete",
+          "deleteTooltip": "Delete"
+        },
+        "loadingSelectorDetails": "Loading items...",
+        "loadingSelectorDetailsMessage": "We are in the process of finding the details regarding the selector: <selector/>. Please wait a moment.",
+        "general": {
+          "title": "General information",
+          "id": "ID",
+          "name": "Name",
+          "displayName": "Display name",
+          "createdOn": "Creation date",
+          "editedOn": "Date modified",
+          "createdBy": "Created by",
+          "selector": "Selector",
+          "description": "Description",
+          "attribute": "Attribute(s)"
+        },
+        "parent": "Parent selector",
+        "child": "Child selector",
+        "noRelatedLabel": "No related items",
+        "noRelatedMessage": "It appears that this item has no other items attached to it. You can add this element as a child or parent of another by selecting the appropriate field and value <link/>",
+        "noRelatedLinkRedirect": "on this page"
+      },
+      "tags": {
+        "all": "All",
+        "group": "Group",
+        "array": "Array",
+        "text": "Text",
+        "html": "HTML",
+        "split": "Split",
+        "attribute": "Attribute",
+        "number": "First number",
+        "json": "JSON"
+      }
+    }
+  },
+  "actions": {
+    "list": "List",
+    "create": "Create",
+    "edit": "Edit",
+    "show": "Show"
+  },
+  "buttons": {
+    "create": "Create",
+    "save": "Save",
+    "logout": "Logout",
+    "delete": "Delete",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "confirm": "Are you sure ?",
+    "filter": "Filter",
+    "clear": "Clear",
+    "refresh": "Refresh",
+    "show": "Show",
+    "undo": "Undo",
+    "import": "Import",
+    "clone": "Clone",
+    "notAccessTitle": "You do not have the appropriate access rights for this action"
+  },
+  "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
+  "notifications": {
+    "success": "Successful",
+    "error": "Error (status code: {{statusCode}})",
+    "undoable": "You have {{seconds}} seconds to undo",
+    "createSuccess": "Successfully created {{resource}}",
+    "createError": "There was an error creating {{resource}} (status code: {{statusCode}})",
+    "deleteSuccess": "Successfully deleted {{resource}}",
+    "deleteError": "Error when deleting {{resource}} (status code: {{statusCode}})",
+    "editSuccess": "Successfully edited {{resource}}",
+    "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
+    "importProgress": "Importing: {{processed}}/{{total}}"
+  },
+  "loading": "Loading",
+  "tags": {
+    "clone": "Clone"
+  },
+  "dashboard": {
+    "title": "Dashboard"
+  },
+  "table": {
+    "actions": "Actions"
+  },
+  "documentTitle": {
+    "default": "refine",
+    "suffix": " | Refine",
+    "post": {
+      "list": "Posts | Refine",
+      "show": "#{{id}} Show Post | Refine",
+      "edit": "#{{id}} Edit Post | Refine",
+      "create": "Create new Post | Refine",
+      "clone": "#{{id}} Clone Post | Refine"
+    }
+  },
+  "autoSave": {
+    "success": "saved",
+    "error": "auto save failure",
+    "loading": "saving...",
+    "idle": "waiting for changes"
+  },
+  "menu": {
+    "task": "Tasks",
+    "selector": "Selectors",
+    "queue": "Queue"
+  },
+  "input": {
+    "required": "This field is required"
+  }
+}

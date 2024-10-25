@@ -1,34 +1,27 @@
 import { Box, Typography, Button, Grid, MenuItem, TextField, IconButton } from "@mui/material";
-import { Code, DataArray, TextFields, Transform, FormatQuote, LooksOne, DataObject, IndeterminateCheckBox, Search, Cancel } from "@mui/icons-material";
-import { useParsed, useTranslation } from "@refinedev/core";
-import { Edit } from "@refinedev/mui";
+import { Settings, Refresh, Inventory, Code, AddBox, DataArray, TextFields, Transform, FormatQuote, LooksOne, DataObject, IndeterminateCheckBox, Search, Cancel } from "@mui/icons-material";
+import { useParsed } from "@refinedev/core";
+import { Edit, useAutocomplete } from "@refinedev/mui";
 import { useForm } from "@refinedev/react-hook-form";
 import { useEffect, useState, useCallback } from "react";
-import { DeleteButton, SaveButton, RefreshButton, ListButton } from "@refinedev/mui";
-
-import { AttributeField } from "./create";
-
-interface SelectorData {
-  selector: { _id: string, description?: string };
-}
+import { DeleteButton, EditButton, List, ShowButton, SaveButton, RefreshButton, ListButton } from "@refinedev/mui";
+import { Controller } from "react-hook-form";
 
 export const SelectorEdit = () => {
-  const { translate } = useTranslation();
-
   const fieldName = ["name", "displayName", "selector", "description"];
   const attributeArray = [
-    { text: translate("pages.selectors.tags.group"), key: "group" },
-    { text: translate("pages.selectors.tags.array"), key: "array" },
-    { text: translate("pages.selectors.tags.text"), key: "text" },
-    { text: translate("pages.selectors.tags.html"), key: "html" },
-    { text: translate("pages.selectors.tags.split"), key: "split" },
-    { text: translate("pages.selectors.tags.attribute"), key: "attrText" },
-    { text: translate("pages.selectors.tags.number"), key: "firstNumber" },
-    { text: translate("pages.selectors.tags.json"), key: "json" }
+    { text: "Groupe", icon: (<IndeterminateCheckBox sx={{ color: "#5F89B2", scale: .7 }} />), key: "group" },
+    { text: "Tableau", icon: (<DataArray sx={{ color: "#7B1FA2", scale: .7 }} />), key: "array" },
+    { text: "Texte", icon: (<TextFields sx={{ color: "#FFC900", scale: .7 }} />), key: "text" },
+    { text: "HTML", icon: (<Code sx={{ color: "#022FFF", scale: .7 }} />), key: "html" },
+    { text: "Split", icon: (<Transform sx={{ color: "#1976D2", scale: .7 }} />), key: "split" },
+    { text: "Attribut", icon: (<FormatQuote sx={{ color: "#C464E1", scale: .7 }} />), key: "attrText" },
+    { text: "Premier nombre", icon: (<LooksOne sx={{ color: "#E400B0", scale: .7 }} />), key: "firstNumber" },
+    { text: "JSON", icon: (<DataObject sx={{ color: "#B80384", scale: .7 }} />), key: "json" }
   ]
 
-  const [data, setData] = useState<SelectorData | null>(null);
-  const [selectedGroup, setSelectedGroup] = useState<{ required: string } | {}>({});
+  const [data, setData] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(false);
   const [selectedAttributes, setSelectedAttributes] = useState([{ key: "", value: "" }]);
   const [selectElements, setSelectElements] = useState([[...attributeArray]]);
   const { id } = useParsed();
@@ -40,7 +33,6 @@ export const SelectorEdit = () => {
     register,
     trigger,
     setValue,
-    unregister,
     formState: { errors },
   } = useForm({
     refineCoreProps: {
@@ -49,6 +41,36 @@ export const SelectorEdit = () => {
       id: id
     }
   });
+
+  useEffect(() => {
+    if (query?.data?.data && !data) {
+      const omit = ["name", "_id", "displayName", "selector", "description", "parentId"];
+
+      const selector = query.data.data.selector;
+      const selectorEntries = Object.entries(selector);
+      const selectorAttributes = selectorEntries
+        .filter((attr) => !omit.includes(attr[0]))
+        .map((attr) => ({ key: attr[0], value: "" }));
+
+      const updatedSelectElements = [...selectElements];
+      selectorAttributes.forEach((attr, index) => {
+        if (index !== 0) {
+          updatedSelectElements.push(computeSelectElements(selectorAttributes[index - 1].key, selectorAttributes));
+        }
+      });
+
+      // fill all the field
+      omit.forEach(attr => {
+        if (attr !== "_id") {
+          setValue(attr, selector[attr]);
+        }
+      });
+
+      setSelectElements(updatedSelectElements);
+      setSelectedAttributes(selectorAttributes);
+      setData(query.data.data);
+    }
+  }, [query?.data?.data, data]);
 
   const computeSelectElements = (key: string, selectedAttributes: { key: string, value: boolean | number | string }[]) => {
     const newAttributes = [];
@@ -120,56 +142,10 @@ export const SelectorEdit = () => {
     setSelectElements(updatedSelectElements.filter((_, i) => i !== index));
   };
 
-  const changeDelimiterForSplit = (index: number, event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const updatedAttributes = [...selectedAttributes];
-    updatedAttributes[index].value = event.target.value;
-    setSelectedAttributes(updatedAttributes);
-  };
-
-  useEffect(() => {
-    unregister("selector");
-    if (Object.keys(selectedGroup).includes("required")) {
-      register("selector", { required: translate("input.required") });
-    } else {
-      register("selector");
-    }
-    trigger("selector");
-  }, [selectedGroup, register, unregister, trigger, setValue, translate]);
-
-  useEffect(() => {
-    if (query?.data?.data && !data) {
-      const omit = ["name", "_id", "displayName", "selector", "description", "parentId"];
-
-      const selector = query.data.data.selector;
-      const selectorEntries = Object.entries(selector);
-      const selectorAttributes = selectorEntries
-        .filter((attr) => !omit.includes(attr[0]))
-        .map((attr) => ({ key: attr[0], value: "" }));
-
-      const updatedSelectElements = [...selectElements];
-      selectorAttributes.forEach((attr, index) => {
-        if (index !== 0) {
-          updatedSelectElements.push(computeSelectElements(selectorAttributes[index - 1].key, selectorAttributes));
-        }
-      });
-
-      // fill all the field
-      omit.forEach(attr => {
-        if (attr !== "_id") {
-          setValue(attr, selector[attr]);
-        }
-      });
-
-      setSelectElements(updatedSelectElements);
-      setSelectedAttributes(selectorAttributes);
-      setData(query.data.data as SelectorData);
-    }
-  }, [query?.data?.data, data]);
-
   return (
     <Edit isLoading={formLoading}
       headerProps={{
-        title: (<Typography variant="h4">{translate("pages.selectors.edit.title", { id })}</Typography>),
+        title: (<Typography variant="h4">Modifier le sélecteur {id}</Typography>),
         style: {
           rowGap: "10px",
           paddingTop: 0,
@@ -178,8 +154,8 @@ export const SelectorEdit = () => {
       }}
       headerButtons={({ listButtonProps, refreshButtonProps }) => (
         <>
-          <ListButton {...listButtonProps} children={translate("pages.selectors.edit.headerButtons.list")}></ListButton>
-          <RefreshButton {...refreshButtonProps} children={translate("pages.selectors.edit.headerButtons.refresh")}></RefreshButton>
+          <ListButton {...listButtonProps} children="Liste des sélecteurs"></ListButton>
+          <RefreshButton {...refreshButtonProps} children="Rafraichir"></RefreshButton>
         </>
       )}
       footerButtons={({ deleteButtonProps, saveButtonProps }) => (
@@ -189,22 +165,23 @@ export const SelectorEdit = () => {
             {...deleteButtonProps}
             variant="contained"
             recordItemId={data?.selector?._id}
-            confirmTitle={translate("pages.selectors.edit.deleteTitle", { id: data?.selector?._id })}
-            confirmCancelText={translate("pages.selectors.edit.deleteOkButton")}
-            confirmOkText={translate("pages.selectors.edit.deleteCancelButton")}
+            confirmTitle={`Voulez-vous vraiment supprimer le sélecteur : ${data?.selector?._id} ?`}
+            confirmCancelText="Annuler"
+            confirmOkText="Oui, supprimer"
           />
         </>
       )}
       saveButtonProps={{
         ...saveButtonProps,
-        children: translate("pages.selectors.edit.footerButtons.save"),
+        children: "Enregistrer le sélecteur",
         variant: "contained",
         color: "primary",
       }}
       deleteButtonProps={{
-        children: translate("pages.selectors.edit.footerButtons.delete")
+        children: "Supprimer"
       }}
     >
+
       <Grid
         container
         spacing={2}
@@ -215,7 +192,7 @@ export const SelectorEdit = () => {
         <Grid item sm={12} md={6}>
           <TextField
             {...register("name", {
-              required: translate("input.required"),
+              required: "Ce champs est obligatoire",
             })}
             variant="standard"
             error={!!errors?.name}
@@ -224,7 +201,7 @@ export const SelectorEdit = () => {
             fullWidth
             InputLabelProps={{ shrink: true }}
             type="text"
-            label={translate("pages.selectors.create.nameFieldInputLabel")}
+            label={"Nom"}
             name="name"
             className="custom-input"
           />
@@ -237,12 +214,12 @@ export const SelectorEdit = () => {
             fullWidth
             InputLabelProps={{ shrink: true }}
             type="text"
-            label={translate("pages.selectors.create.displayNameFieldInputLabel")}
+            label={"Nom d'affichage"}
             name="displayName"
             className="custom-input"
           />
           <TextField
-            {...register("selector")}
+            {...register("selector", { required: true ? "Ce champs est obligatoire" : "" })}
             variant="standard"
             error={!!errors?.selector}
             helperText={<>{errors?.selector?.message}</>}
@@ -250,24 +227,61 @@ export const SelectorEdit = () => {
             fullWidth
             InputLabelProps={{ shrink: true }}
             type="text"
-            label={translate("pages.selectors.create.selectorInputFieldLabel")}
+            label={"Sélecteur"}
             name="selector"
             className="custom-input"
           />
           {selectedAttributes.map((attribute, index) => (
-            <AttributeField
-              attribute={attribute}
-              index={index}
-              name="attribute"
-              selectElements={selectElements}
-              key={`attribute-${index}`}
-              onChange={handleAttributeChange}
-              onDelimiterChange={changeDelimiterForSplit}
-              onRemove={() => handleRemoveAttribute(index)}
-              setter={setValue}
-            />
+            <Box
+              key={index}
+              sx={{
+                mt: "20px",
+                display: "flex",
+                columnGap: "5px",
+                alignItems: "flex-end"
+              }}
+            >
+              <TextField
+                select
+                variant="standard"
+                label="Sélectionner un attribut pour le sélecteur ..."
+                value={attribute.key}
+                onChange={(event) => handleAttributeChange(index, event)}
+                sx={{ minWidth: "300px", "& .MuiInputBase-input": { fontSize: ".875rem" } }}
+                InputLabelProps={{ shrink: true }}
+              >
+                {
+                  selectElements[index].map((attr) => (
+                    <MenuItem key={attr.key} value={attr.key}>
+                      {attr.text}
+                    </MenuItem>
+                  ))
+                }
+              </TextField>
+
+              {
+                { key: "" }.key === "split" ? (
+                  <TextField
+                    variant="standard"
+                    label="Délimiteur ..."
+                    sx={{ "& .MuiInputBase-input": { fontSize: ".875rem" } }}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={() => { }}
+                  >
+                  </TextField>
+                ) : null
+              }
+
+              {
+                index !== 0 ? (
+                  <IconButton onClick={() => handleRemoveAttribute(index)} color="error" sx={{ scale: .75 }}>
+                    <Cancel />
+                  </IconButton>
+                ) : null
+              }
+            </Box>
           ))}
-          <Button onClick={handleAddAttribute} sx={{ mt: "20px" }}>{ }</Button>
+          <Button onClick={handleAddAttribute} sx={{ mt: "20px" }}>Ajouter un nouvel attribut</Button>
         </Grid>
         <Grid item sm={12} md={6}>
           <TextField
@@ -279,11 +293,11 @@ export const SelectorEdit = () => {
             fullWidth
             InputLabelProps={{ shrink: true }}
             type="text"
-            label={translate("pages.selectors.create.descriptionInputFieldLabel")}
+            label={"Description"}
             name="description"
             className="custom-input"
             multiline={true}
-            placeholder={translate("pages.selectors.create.descriptionInputFieldPlaceholder")}
+            placeholder="VOus pouvez saisir une petite déscription du sélecteur ici."
             value={data?.selector?.description}
             inputProps={{ spellCheck: "false" }}
           />

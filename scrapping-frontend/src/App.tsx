@@ -1,12 +1,15 @@
 import { Authenticated, GitHubBanner, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
+import type { I18nProvider } from "@refinedev/core";
+import { useTranslation } from "react-i18next";
 
 import {
   ErrorComponent,
   notificationProvider,
   RefineSnackbarProvider,
   ThemedLayoutV2,
+  ThemedSiderV2
 } from "@refinedev/mui";
 
 import CssBaseline from "@mui/material/CssBaseline";
@@ -20,30 +23,46 @@ import routerBindings, {
 //import dataProvider from "@refinedev/simple-rest";
 
 import { dataProvider } from "./providers/mockDataProvider";
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { authProvider } from "./authProvider";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import {
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
+  JobList,
+  JobShow,
+  JobEdit,
+  JobAdd
 } from "./pages/jobs";
 import {
   SelectorConfigList,
   SelectorShow,
-  SelectorAdd
+  SelectorAdd,
+  SelectorEdit
 } from "./pages/selector";
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 
-import { Settings } from "@mui/icons-material";
+import { Settings, Google, Queue } from "@mui/icons-material";
+import { Typography } from "@mui/material";
 
 function App() {
+  const { t, i18n } = useTranslation();
+
+  const i18nProvider: I18nProvider = {
+    translate: (key: string, options?: any) => {
+      const result = t(key, options);
+      return typeof result === "string" ?
+        result :
+        "null";
+    },
+    changeLocale: (lang: string) => i18n.changeLanguage(lang),
+    getLocale: () => i18n.language,
+  };
+
   return (
     <BrowserRouter>
-      <GitHubBanner />
+      {/*<GitHubBanner />*/}
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <CssBaseline />
@@ -51,13 +70,14 @@ function App() {
           <RefineSnackbarProvider>
             <DevtoolsProvider>
               <Refine
+                i18nProvider={i18nProvider}
                 dataProvider={dataProvider}
                 notificationProvider={notificationProvider}
                 routerProvider={routerBindings}
                 authProvider={authProvider}
                 resources={[
                   {
-                    name: "Liste des tâches",
+                    name: i18nProvider.translate("menu.task"),
                     list: "/jobs/list",
                     create: "/jobs/add",
                     edit: "/jobs/update/:id",
@@ -67,12 +87,23 @@ function App() {
                     },
                   },
                   {
-                    name: "Selecteur",
+                    name: i18nProvider.translate("menu.selector"),
                     list: "/selector/list",
                     create: "/selector/add",
                     edit: "/selector/update/:id",
                     show: "/selector/details/:id",
                     icon: (<Settings />),
+                    meta: {
+                      canDelete: true,
+                    },
+                  },
+                  {
+                    name: i18nProvider.translate("menu.queue"),
+                    list: "/queue/list",
+                    create: "/queue/add",
+                    edit: "/queue/update/:id",
+                    show: "/queue/details/:id",
+                    icon: (<Queue />),
                     meta: {
                       canDelete: true,
                     },
@@ -92,24 +123,39 @@ function App() {
                         key="authenticated-inner"
                         fallback={<CatchAllNavigate to="/login" />}
                       >
-                        <ThemedLayoutV2 Header={Header}>
+                        <ThemedLayoutV2
+                          Header={Header}
+                          Sider={() => (
+                            <ThemedSiderV2
+                              Title={({ collapsed }) => (
+                                <>
+                                  <Google></Google>
+                                  {
+                                    !collapsed ? (<Typography variant="h6">GMB Scrap</Typography>) : null
+                                  }
+                                </>
+                              )}
+                            />
+                          )}
+                        >
                           <Outlet />
                         </ThemedLayoutV2>
                       </Authenticated>
                     }
                   >
-                    <Route index element={<NavigateToResource resource="jobs" />} />
+                    <Route path="/" element={<Navigate to="/jobs/list" />} />
                     <Route path="/jobs">
-                      <Route index path="/jobs/list" element={<BlogPostList />} />
-                      <Route path="/jobs/update/:id" element={<BlogPostEdit />} />
-                      <Route path="/jobs/details/:id" element={<BlogPostShow />} />
+                      <Route index path="/jobs/list" element={<JobList />} />
+                      <Route path="/jobs/add" element={<JobAdd />} />
+                      <Route path="/jobs/update/:id" element={<JobEdit />} />
+                      <Route path="/jobs/details/:id" element={<JobShow />} />
                     </Route>
                     <Route path="/selector">
                       <Route index path="/selector/list" element={<SelectorConfigList />} />
                       <Route path="/selector/add" element={<SelectorAdd />} />
                       <Route path="/selector/details/:id" element={<SelectorShow />} />
+                      <Route path="/selector/update/:id" element={<SelectorEdit />} />
                     </Route>
-                    SelectorConfigList
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
                   <Route
@@ -139,8 +185,8 @@ function App() {
             </DevtoolsProvider>
           </RefineSnackbarProvider>
         </ColorModeContextProvider>
-      </RefineKbarProvider>
-    </BrowserRouter>
+      </RefineKbarProvider >
+    </BrowserRouter >
   );
 }
 

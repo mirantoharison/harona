@@ -33484,7 +33484,7 @@
         "processedOn": "13/09/2024 06:41:06",
         "finishedOn": "13/09/2024 06:41:06",
         "returnvalue": {},
-        "comments": "job.on is not a function",
+        "comments": "job.on is not a function and this is a customized text to see if the refresh button work correctly",
         "countReviewsScrapped": 0,
         "totalReviews": 0
     },

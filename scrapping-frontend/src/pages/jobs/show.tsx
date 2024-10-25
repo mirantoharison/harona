@@ -1,6 +1,6 @@
 import { Tabs, Tab, Stack, Box, Grid, Select, MenuItem, Typography, Card, CardContent, SxProps, Theme, CircularProgress, Pagination, Button, SelectChangeEvent } from "@mui/material";
 import { LinkOutlined, Star, DataObject, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft, PlayArrow } from "@mui/icons-material";
-import { useShow, useParsed, useBreadcrumb, useList } from "@refinedev/core";
+import { useShow, useParsed, useList, useTranslation } from "@refinedev/core";
 import { StateCell, Tag } from "../../components";
 import {
   Show,
@@ -11,7 +11,7 @@ import {
 } from "@refinedev/mui";
 import React, { useState, useRef, useCallback, useEffect } from "react";
 
-interface BlogDetailConditionalFieldProps {
+interface TaskDetailConditionalFieldProps {
   style?: SxProps<Theme>;
   field: {
     label: string;
@@ -19,7 +19,7 @@ interface BlogDetailConditionalFieldProps {
   };
 }
 
-interface BlogReviewProps {
+interface TaskReviewProps {
   id: number;
   reviewerName: string;
   reviewerStar: number;
@@ -28,19 +28,20 @@ interface BlogReviewProps {
   reviewerLink: string;
 }
 
-interface BlogReviewCardProps {
+interface TaskReviewCardProps {
   style?: SxProps<Theme>;
-  review: BlogReviewProps;
+  review: TaskReviewProps;
 }
 
-const BlogReviewCard: React.FC<BlogReviewCardProps> = ({ review, style }) => {
+const TaskReviewCard: React.FC<TaskReviewCardProps> = ({ review, style }) => {
   const [fullNote, setFullNote] = useState(false);
   const showFullNote = () => {
     setFullNote(!fullNote);
   }
+  const { translate } = useTranslation();
 
   return (
-    <Card sx={style}>
+    <Card sx={{ ...style, height: "100%" }}>
       <CardContent>
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
           <Box sx={{ display: "flex", gap: 1, alignItems: "center", flex: 1 }}>
@@ -54,7 +55,7 @@ const BlogReviewCard: React.FC<BlogReviewCardProps> = ({ review, style }) => {
             <Typography variant="body2">#{review.id}</Typography>
           </Box>
         </Box>
-        <Typography variant="body2">a publié le {review.reviewDate}</Typography>
+        {review.reviewDate ? (<Typography variant="body2">{translate("pages.jobs.show.tab.reviews.reviewCard.postedOn", { date: review.reviewDate })}</Typography>) : null}
         {
           review.reviewNote ?
             (
@@ -65,7 +66,7 @@ const BlogReviewCard: React.FC<BlogReviewCardProps> = ({ review, style }) => {
               </Box>
             ) :
             (<Box sx={{ mt: 2.5, pt: 2.5, borderTop: "1px solid #f5f5f5" }}>
-              (Aucune note laissée par l'utilisateur)
+              {translate("pages.jobs.show.tab.reviews.reviewCard.noReview")}
             </Box>)
         }
         {
@@ -77,11 +78,11 @@ const BlogReviewCard: React.FC<BlogReviewCardProps> = ({ review, style }) => {
               rel="noopener noreferrer"
               className="link"
               onClick={showFullNote}
-              title="Cliquez ici pour afficher l'avis dans un nouvel onglet">
+              title={translate("pages.jobs.show.tab.reviews.reviewCard.reviewLinkRedirection")}>
               {
                 fullNote ?
-                  (<Box sx={{ display: "flex", alignItems: "center" }}><Typography variant="body1" sx={{ fontSize: ".9rem" }}>Masquer une partie de l'avis</Typography><KeyboardDoubleArrowLeft sx={{ scale: .8 }} /></Box>) :
-                  (<Box sx={{ display: "flex", alignItems: "center" }}><Typography variant="body1" sx={{ fontSize: ".9rem" }}>Voir l'intégralité de l'avis</Typography><KeyboardDoubleArrowRight sx={{ scale: .8 }} /></Box>)
+                  (<Box sx={{ display: "flex", alignItems: "center" }}><Typography variant="body1" sx={{ fontSize: ".9rem" }}>{translate("pages.jobs.show.tab.reviews.reviewCard.reviewSomeNote")}</Typography><KeyboardDoubleArrowLeft sx={{ scale: .8 }} /></Box>) :
+                  (<Box sx={{ display: "flex", alignItems: "center" }}><Typography variant="body1" sx={{ fontSize: ".9rem" }}>{translate("pages.jobs.show.tab.reviews.reviewCard.reviewFullNote")}</Typography><KeyboardDoubleArrowRight sx={{ scale: .8 }} /></Box>)
               }
             </a>
           ) : null
@@ -91,7 +92,7 @@ const BlogReviewCard: React.FC<BlogReviewCardProps> = ({ review, style }) => {
   );
 }
 
-const BlogDetailContitionalField: React.FC<BlogDetailConditionalFieldProps> = ({ style = {}, field }) => {
+const TaskDetailContitionalField: React.FC<TaskDetailConditionalFieldProps> = ({ style = {}, field }) => {
   if (field.label && field.value) {
     const isJSXElement = React.isValidElement(field.value);
     const isAlphaNumeric = typeof field.value === "string" || typeof field.value === "number";
@@ -112,12 +113,12 @@ const BlogDetailContitionalField: React.FC<BlogDetailConditionalFieldProps> = ({
   return (<></>);
 }
 
-export const BlogPostShow = () => {
-  // State to keep track of the selected tab
+export const JobShow = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
 
+  const { translate } = useTranslation();
   const { id } = useParsed();
   const { query } = useShow({ resource: "jobs", id });
   const { data, isLoading, isFetching, isError, refetch } = query;
@@ -162,9 +163,7 @@ export const BlogPostShow = () => {
       canDelete={true}
       canEdit={jobData?.state !== 'completed'}
       title={
-        <Typography variant="h4">
-          Détails concernant la tâche {id}
-        </Typography>
+        <Typography variant="h4">{translate("pages.jobs.show.title", { id })}</Typography>
       }
       headerProps={{
         style: {
@@ -181,15 +180,14 @@ export const BlogPostShow = () => {
       }) => (
         <>
           {listButtonProps && (
-            <ListButton {...listButtonProps} title="Revenir vers la liste des tâches">Liste des tâches</ListButton>
+            <ListButton {...listButtonProps} title={translate("pages.jobs.show.headerButtons.listTooltip")}>{translate("pages.jobs.show.headerButtons.list")}</ListButton>
           )}
-          <ExportButton>Exporter</ExportButton>
           {editButtonProps && (
-            <EditButton {...editButtonProps} title="Modifier">Modifier</EditButton>
+            <EditButton {...editButtonProps} title={translate("pages.jobs.show.headerButtons.editTooltip")}></EditButton>
           )}
-          <Button sx={{ display: "flex", gap: .8, alignItems: "center" }}><PlayArrow />Lancer</Button>
+          <Button sx={{ display: "flex", gap: .8, alignItems: "center" }}><PlayArrow />{translate("pages.jobs.show.headerButtons.launch")}</Button>
           {deleteButtonProps && (
-            <DeleteButton {...deleteButtonProps} title="Supprimer">Supprimer</DeleteButton>
+            <DeleteButton {...deleteButtonProps} title={translate("pages.jobs.show.headerButtons.deleteTooltip")}></DeleteButton>
           )}
         </>
       )}
@@ -206,13 +204,11 @@ export const BlogPostShow = () => {
         },
       }}
     >
-
       <Tabs
         value={activeTab}
         onChange={handleTabChange}
         indicatorColor="primary"
         textColor="primary"
-        aria-label="basic tabs example"
         style={{
           margin: "auto -16px",
           paddingTop: "0",
@@ -222,9 +218,9 @@ export const BlogPostShow = () => {
           borderBottom: "1px solid #f5f5f5"
         }}
       >
-        <Tab label="Informations générales" />
-        <Tab label="Détails concernant la page" />
-        <Tab label="Avis récoltés" />
+        <Tab label={translate("pages.jobs.show.tab.general.title")} />
+        <Tab label={translate("pages.jobs.show.tab.details.title")} />
+        <Tab label={translate("pages.jobs.show.tab.reviews.title")} />
       </Tabs>
 
       {activeTab === 0 && (
@@ -233,10 +229,10 @@ export const BlogPostShow = () => {
           {
             !isLoading ? (
               <Stack rowGap={"10px"}>
-                <BlogDetailContitionalField field={{ label: "ID de la tâche", value: jobData.id }} />
-                <BlogDetailContitionalField field={{ label: "Nom de la fil d'attente parent", value: jobData.name }} />
-                <BlogDetailContitionalField field={{
-                  label: "URL relatif à la tâche",
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.id") as string, value: jobData.id }} />
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.name") as string, value: jobData.name }} />
+                <TaskDetailContitionalField field={{
+                  label: translate("pages.jobs.show.tab.general.url") as string,
                   value: (
                     <a href={jobData.data.url || "#"} target="_blank" style={{ display: "flex", columnGap: "8px" }} rel="noopener noreferrer" className="link">
                       <Typography>{jobData.data.url}</Typography>
@@ -244,13 +240,13 @@ export const BlogPostShow = () => {
                     </a>
                   )
                 }} />
-                <BlogDetailContitionalField field={{ label: "Etat", value: (<StateCell row={{ state: jobData.state }} />) }} style={{ alignItems: "center" }} />
-                <BlogDetailContitionalField field={{ label: "Date de création", value: jobData.timestamp }} />
-                <BlogDetailContitionalField field={{ label: "Date de traitement", value: jobData.processedOn }} />
-                <BlogDetailContitionalField field={{ label: "Términé le", value: jobData.finishedOn }} />
-                <BlogDetailContitionalField field={{ label: "Nombre d'avis total disponible", value: jobData.totalReviews }} />
-                <BlogDetailContitionalField field={{ label: "Nombre d'avis récupéré", value: jobData.countReviewsScrapped }} />
-                <BlogDetailContitionalField field={{ label: "Commentaires", value: jobData.comments }} style={{ flexDirection: "column" }} />
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.state") as string, value: (<StateCell row={{ state: jobData.state }} />) }} style={{ alignItems: "center" }} />
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.createdOn") as string, value: jobData.timestamp }} />
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.processedOn") as string, value: jobData.processedOn }} />
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.finishedOn") as string, value: jobData.finishedOn }} />
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.reviewTotal") as string, value: jobData.totalReviews }} />
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.reviewCollected") as string, value: jobData.countReviewsScrapped }} />
+                <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.general.comment") as string, value: jobData.comments }} style={{ flexDirection: "column" }} />
               </Stack>) : ("")
           }
         </Box>
@@ -261,26 +257,26 @@ export const BlogPostShow = () => {
           flex={1} className="task-details-section">
           {
             !isLoading && companyInfo !== undefined ? (
-              <Grid container sx={{ alignItems: "flex-start" }}>
-                <Grid item sx={{ display: "flex", flexDirection: "column", rowGap: "10px" }} md={8} lg={4}>
-                  <BlogDetailContitionalField field={{ label: "Nom de la page", value: companyInfo.title }} />
-                  <BlogDetailContitionalField field={{ label: "Type d'activité", value: companyInfo.businessType }} />
-                  <BlogDetailContitionalField field={{ label: "Adresse", value: companyInfo.address }} />
-                  <BlogDetailContitionalField field={{ label: "Plus code", value: companyInfo.plusCode }} />
-                  <BlogDetailContitionalField field={{
-                    label: "Site web", value: (
+              <Grid container spacing={6} sx={{ alignItems: "flex-start" }}>
+                <Grid item sx={{ display: "flex", flexDirection: "column", rowGap: "10px" }} sm={12} md={7} lg={6} xl={4}>
+                  <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.name"), value: companyInfo.title }} />
+                  <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.type"), value: companyInfo.businessType }} />
+                  <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.address"), value: companyInfo.address }} />
+                  <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.plusCode"), value: companyInfo.plusCode }} />
+                  <TaskDetailContitionalField field={{
+                    label: translate("pages.jobs.show.tab.details.website"), value: (
                       <a className="link" href={companyInfo.website || "#"} target="_blank" rel="noopener noreferrer" style={{ display: "flex", columnGap: "8px" }}>
                         <Typography>{companyInfo.website}</Typography>
                         <LinkOutlined />
                       </a>
                     )
                   }} />
-                  <BlogDetailContitionalField field={{ label: "Téléphone", value: companyInfo.phone }} />
-                  <BlogDetailContitionalField
+                  <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.phone"), value: companyInfo.phone }} />
+                  <TaskDetailContitionalField
                     field={{
-                      label: "Note moyenne des avis",
+                      label: translate("pages.jobs.show.tab.details.averageRate"),
                       value: (
-                        <Tag icon={(<Star sx={{ color: '#FECD00', marginRight: .3, scale: .8 }} />)} text={`${companyInfo.averageReview} étoile${companyInfo.averageReview > 1 ? "s" : ""}`} />
+                        <Tag icon={(<Star sx={{ color: '#FECD00', marginRight: .3, scale: .8 }} />)} text={translate("pages.jobs.show.tab.details.averageRateStarText", { average: companyInfo.averageReview, s: companyInfo.averageReview > 1 ? "s" : "" })} />
                       )
                     }}
                     style={{ alignItems: "center" }} />
@@ -289,7 +285,7 @@ export const BlogPostShow = () => {
                   display: "flex",
                   columnGap: "45px",
                   alignItems: "center"
-                }} md={4} lg={8}>
+                }} sm={12} md={5} lg={6} xl={8}>
                   <Box sx={{
                     textAlign: "center"
                   }}>
@@ -356,12 +352,18 @@ export const BlogPostShow = () => {
                       page={Number(reviewData.page)}
                       onChange={handlePageChange}
                     />
-                    <Typography variant="body2">Eléments {`${(reviewData?.page - 1) * pageSize + 1}-${Math.min(reviewData?.page * pageSize, reviewData?.total || 0)}`} de {reviewData?.total ?? 0}</Typography>
+                    <Typography variant="body2">{
+                      translate("pages.jobs.show.footerElementsCount", {
+                        from: (reviewData?.page - 1) * pageSize + 1,
+                        to: Math.min(reviewData?.page * pageSize, reviewData?.total || 0),
+                        total: reviewData?.total ?? 0
+                      })
+                    }</Typography>
                     <Box sx={{
                       display: "flex",
                       alignItems: "center",
                     }}>
-                      <Typography variant="body2">Afficher les avis par :</Typography>
+                      <Typography variant="body2">{translate("pages.jobs.show.footerElementsShowCount")}</Typography>
                       <Select
                         value={pageSize}
                         onChange={handlePageSizeChange}
@@ -387,11 +389,11 @@ export const BlogPostShow = () => {
                       <Grid container spacing={2}>
                         {
                           reviewData?.data?.map((review, index) => {
-                            const reviewWithIndex = { ...review, id: index + (reviewData?.page - 1) * pageSize + 1 } as { id: number } & BlogReviewProps;
+                            const reviewWithIndex = { ...review, id: index + (reviewData?.page - 1) * pageSize + 1 } as { id: number } & TaskReviewProps;
 
                             return (
                               <Grid item sm={12} md={6} lg={4} xl={3} key={reviewWithIndex.id}>
-                                <BlogReviewCard review={reviewWithIndex} />
+                                <TaskReviewCard review={reviewWithIndex} />
                               </Grid>
                             );
                           })

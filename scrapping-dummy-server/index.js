@@ -94,9 +94,17 @@ app.put("/jobs/:id", async (req, res) => {
 });
 
 app.post("/jobs/add", async (req, res) => {
+  console.log(req.body)
+
   res.send({
     message: "success",
   });
+});
+
+app.put("/jobs/update/:id", async (req, res) => {
+  const data = { ...req.body };
+  console.log(data);
+  res.json({ test: true });
 });
 
 
@@ -141,6 +149,7 @@ app.get("/selectors/list", async (req, res) => {
       selectors = selectors[parent];
     }
   }*/
+
   if (query.search) {
     let searchRegexp = createRegex(query.search);
     selectors = selectors.filter((selector) =>
@@ -152,13 +161,12 @@ app.get("/selectors/list", async (req, res) => {
     )
   }
 
-  console.log(query)
   if (query.group) {
     selectors = selectors.filter((selector) => selector[query.group]);
   }
 
   let selectorsTotalLength = selectors.length;
-  console.log(query, selectors)
+  console.log(query)
 
   if (selectors.length > 0) {
     switch (typeof (selectors[0][query.sort_field] ?? null)) {
@@ -212,6 +220,12 @@ app.get("/selectors/details/:id", async (req, res) => {
 
 app.post("/selectors/add", async (req, res) => {
   console.log(req.body);
+  res.json({ test: true })
+});
+
+app.put("/selectors/update/:id", async (req, res) => {
+  console.log(req.body);
+  console.log(req.params)
   res.json({ test: true })
 });
 
