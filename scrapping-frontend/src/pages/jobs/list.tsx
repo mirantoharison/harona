@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DeleteButton, EditButton, List, ShowButton, RefreshButton } from "@refinedev/mui";
-import { DataGrid, type GridColDef, GridPaginationModel } from "@mui/x-data-grid";
-import { List as ListIcon, Refresh, Public, Search } from "@mui/icons-material";
-import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagination, Card, CardContent, CardActionArea, SxProps, Theme, TextField, InputAdornment, SelectChangeEvent } from "@mui/material";
+import { List as ListIcon, Public, Search } from "@mui/icons-material";
+import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagination, Card, CardContent, SxProps, Theme, TextField, InputAdornment, SelectChangeEvent } from "@mui/material";
 import { useList, useTranslation } from "@refinedev/core";
 import { StateCell } from "../../components";
 
