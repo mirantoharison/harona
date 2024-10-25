@@ -13,7 +13,7 @@ export const dataProvider: DataProvider = {
     return { data };
   },
   update: async ({ resource, id, variables }) => {
-    const response = await fetch(`${API_URL}/${resource}/${id}`, {
+    const response = await fetch(`${API_URL}/${resource}/update/${id}`, {
       method: "put",
       body: JSON.stringify(variables),
       headers: {
@@ -69,6 +69,8 @@ export const dataProvider: DataProvider = {
         "Content-Type": "application/json",
       },
     });
+
+    console.log(variables)
 
     if (response.status < 200 || response.status > 299) throw response;
 

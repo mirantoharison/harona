@@ -1,31 +1,35 @@
 import React, { useState, useEffect } from "react";
-import { DeleteButton, EditButton, List, ShowButton } from "@refinedev/mui";
+import { DeleteButton, EditButton, List, ShowButton, RefreshButton } from "@refinedev/mui";
 import { DataGrid, type GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { List as ListIcon, Refresh, Public, Search } from "@mui/icons-material";
-import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagination, Card, CardContent, CardActionArea, SxProps, Theme, TextField, InputAdornment } from "@mui/material";
-import { useList } from "@refinedev/core";
-import { CreateForm } from "./create";
+import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagination, Card, CardContent, CardActionArea, SxProps, Theme, TextField, InputAdornment, SelectChangeEvent } from "@mui/material";
+import { useList, useTranslation } from "@refinedev/core";
 import { StateCell } from "../../components";
 
-
-interface BlogTaskCardProps {
-  recordId: number;
-  style?: SxProps<Theme>;
-  task: {
-    id: number;
-    name: string;
-    state: string;
-    processedOn: string;
-    finishedOn: string;
-    data: {
-      url: string
-    };
-    totalReviews: number;
-    countReviewsScrapped: number
+interface TaskProps {
+  id: number;
+  name: string;
+  state: string;
+  processedOn: string;
+  finishedOn: string;
+  data: {
+    url: string
   };
+  totalReviews: number;
+  countReviewsScrapped: number
 }
 
-const BlogTaskCard: React.FC<BlogTaskCardProps> = ({ recordId, task, style }) => {
+interface TaskCardProps {
+  recordId: number;
+  style?: SxProps<Theme>;
+  task: TaskProps,
+  canEdit: boolean;
+  canDelete: boolean;
+}
+
+const BlogTaskCard: React.FC<TaskCardProps> = ({ recordId, task, style, canEdit = false, canDelete = false }) => {
+  const { translate } = useTranslation();
+
   return (
     <Card sx={{
       ...style,
@@ -37,8 +41,8 @@ const BlogTaskCard: React.FC<BlogTaskCardProps> = ({ recordId, task, style }) =>
           <Box sx={{ display: "flex", columnGap: "5px", alignItems: "center" }}>
             <Box sx={{ display: "none" }} className="hoverable-button-container">
               <ShowButton hideText recordItemId={recordId} />
-              <EditButton hideText recordItemId={recordId} />
-              <DeleteButton hideText recordItemId={recordId} />
+              {canEdit ? (<EditButton hideText recordItemId={recordId} />) : null}
+              {canDelete ? (<DeleteButton hideText recordItemId={recordId} />) : null}
             </Box>
             <Typography sx={{ padding: "0 5px", pr: 0 }}>#{task.id}</Typography>
           </Box>
@@ -49,34 +53,24 @@ const BlogTaskCard: React.FC<BlogTaskCardProps> = ({ recordId, task, style }) =>
         </Box>
         <StateCell row={task} />
         <Box sx={{ mt: "10px" }}>
-          <Typography variant="body2">Commencée le : {task.processedOn}</Typography>
-          <Typography variant="body2">Finie le : {task.finishedOn}</Typography>
-          <Typography variant="body2">Avis total : {task.totalReviews}</Typography>
-          <Typography variant="body2">Avis scrapés : {task.countReviewsScrapped}</Typography>
+          <Typography variant="body2">{translate("pages.jobs.list.taskCard.startedAt", { value: task.processedOn })}</Typography>
+          <Typography variant="body2">{translate("pages.jobs.list.taskCard.finishedAt", { value: task.finishedOn })}</Typography>
+          <Typography variant="body2">{translate("pages.jobs.list.taskCard.reviewsTotal", { value: task.totalReviews })}</Typography>
+          <Typography variant="body2">{translate("pages.jobs.list.taskCard.reviewsScraped", { value: task.countReviewsScrapped })}</Typography>
         </Box>
       </CardContent>
     </Card >
   );
 }
 
-export const BlogPostList = () => {
+export const JobList = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
-  const [open, setOpen] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [totalRowCount, setTotalRowCount] = useState(0);
   const [sort, setSort] = useState("id");
   const [sortOrder, setSortOrder] = useState(1);
 
-  const filterArray = [
-    { key: "id", label: "ID" },
-    { key: "name", label: "Nom" },
-    { key: "state", label: "Etat" },
-    { key: "processedOn", label: "Date de traitement" },
-    { key: "finishedOn", label: "Date de fin" },
-    { key: "totalReviews", label: "Nombre total d'avis" },
-    { key: "countReviewsScrapped", label: "Nombre d'avis scrapés" }
-  ];
   const { data, isLoading, refetch, } = useList({
     resource: "jobs",
     pagination: {
@@ -89,6 +83,17 @@ export const BlogPostList = () => {
       order: sortOrder === 1 ? "asc" : "desc"
     }]
   });
+  const { translate } = useTranslation();
+
+  const filterArray = [
+    { key: "id", label: translate("pages.jobs.list.headerSortField.id") },
+    { key: "name", label: translate("pages.jobs.list.headerSortField.name") },
+    { key: "state", label: translate("pages.jobs.list.headerSortField.state") },
+    { key: "processedOn", label: translate("pages.jobs.list.headerSortField.processedOn") },
+    { key: "finishedOn", label: translate("pages.jobs.list.headerSortField.finishedOn") },
+    { key: "totalReviews", label: translate("pages.jobs.list.headerSortField.totalReviews") },
+    { key: "countReviewsScrapped", label: translate("pages.jobs.list.headerSortField.countReviewsScrapped") }
+  ];
 
   useEffect(() => {
     if (data) {
@@ -96,57 +101,48 @@ export const BlogPostList = () => {
     }
   }, [data]);
 
-  const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    event.preventDefault();
-    setOpen(true);
-  };
-
-  const handleClose = () => setOpen(false);
-
   const handleRefresh = async () => {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
   };
 
-  const handlePageSizeChange = (event) => {
-    const newPageSize = event.target.value;
+  const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
+    const newPageSize = Number(event.target.value);
     setPage(1);
     setPageSize(newPageSize);
   };
-  const handlePageChange = (event, value) => {
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
-  const handleSortChange = (event) => {
+  const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSort(event.target.value);
   }
-  const handleSortOrderChange = (event) => {
-    setSortOrder(event.target.value);
+  const handleSortOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSortOrder(Number(event.target.value));
   }
 
   return (
     <>
       <List
         title={
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <ListIcon sx={{ marginRight: 1 }} />
-            <Typography variant="h6">Affichage de la liste des tâches enregistrées</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+            <ListIcon sx={{ mr: 3, mt: .95 }} />
+            <Typography variant="h4">{translate("pages.jobs.list.title")}</Typography>
           </Box>
         }
         headerButtons={({ defaultButtons }) => (
           <>
-            <Button type="button" onClick={handleRefresh} sx={{ display: "flex", alignItems: "center" }}>
-              <Refresh sx={{ marginRight: 1 }} />
-              Rafraichir
-            </Button>
+            <RefreshButton onClick={handleRefresh} sx={{ display: "flex", alignItems: "center" }}></RefreshButton>
             {defaultButtons}
           </>
         )}
+        headerProps={{
+          style: { padding: "20px", rowGap: "10px" }
+        }}
         createButtonProps={{
-          children: "Ajouter une nouvelle tâche",
-          onClick: handleOpen
+          children: translate("pages.jobs.list.addNewTask"),
         }}
         contentProps={{
           style: {
@@ -166,7 +162,7 @@ export const BlogPostList = () => {
               <TextField
                 variant="standard"
                 type="search"
-                label="Rechercher une tâche ..."
+                label={translate("pages.jobs.list.headerSearchInputLabel")}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -175,13 +171,13 @@ export const BlogPostList = () => {
                   ),
                 }} className="custom-input"
               />
-              <Button type="button" sx={{ flex: 1 }}>Rechercher</Button>
+              <Button type="button" sx={{ flex: 1 }}>{translate("pages.jobs.list.headerSearchButton")}</Button>
             </Box>
             <Box sx={{ display: "flex", columnGap: "10px" }}>
               <TextField
                 select
                 variant="standard"
-                label="Trier les résultats suivant ..."
+                label={translate("pages.jobs.list.headerSortInputLabel")}
                 value={sort}
                 sx={{
                   "& .MuiInputBase-input": { fontSize: ".875rem" }
@@ -197,15 +193,15 @@ export const BlogPostList = () => {
               <TextField
                 select
                 variant="standard"
-                label="Dans l'odre ..."
+                label={translate("pages.jobs.list.headerSortOrderInputLabel")}
                 value={sortOrder}
                 sx={{
                   "& .MuiInputBase-input": { fontSize: ".875rem" }
                 }}
                 onChange={handleSortOrderChange}
               >
-                <MenuItem value={1}>Croissant</MenuItem>
-                <MenuItem value={-1}>Décroissant</MenuItem>
+                <MenuItem value={1}>{translate("pages.jobs.list.headerSortOrder.ascending")}</MenuItem>
+                <MenuItem value={-1}>{translate("pages.jobs.list.headerSortOrder.descending")}</MenuItem>
               </TextField>
             </Box>
           </Box>
@@ -224,14 +220,13 @@ export const BlogPostList = () => {
               >
                 <CircularProgress />
                 <Typography variant="h6" sx={{ marginTop: "20px" }}>
-                  En cours de chargement de la liste...
+                  {translate("pages.jobs.list.loadingTaskList")}
                 </Typography>
                 <Typography
                   variant="body2"
                   sx={{ width: "50%", minWidth: "400px", marginTop: "10px" }}
                 >
-                  Nous sommes en train de retrouver la liste des tâches qui ont été
-                  créées sur la plateforme. Nous vous prions de patienter un moment.
+                  {translate("pages.jobs.list.loadingTaskListMessage")}
                 </Typography>
               </Box>
             ) : (
@@ -239,7 +234,7 @@ export const BlogPostList = () => {
                 {
                   data?.data.map((task, id) => (
                     <Grid item sm={12} md={6} lg={4} xl={3} key={id}>
-                      <BlogTaskCard recordId={task.id} task={task} />
+                      <BlogTaskCard recordId={Number(task.id) ?? 0} task={task as TaskProps} canEdit={task.state !== "completed"} canDelete={true} />
                     </Grid>
                   ))
                 }
@@ -258,22 +253,29 @@ export const BlogPostList = () => {
               page={page}
               onChange={handlePageChange}
             />
-            <Typography variant="body2">Eléments {`${(page - 1) * pageSize + 1}-${Math.min(page * pageSize, totalRowCount || 0)}`} de {totalRowCount ?? 0}</Typography>
+            <Typography variant="body2">
+              {
+                translate("pages.jobs.list.footerElementsCount", {
+                  from: (page - 1) * pageSize + 1,
+                  to: Math.min(page * pageSize, totalRowCount || 0),
+                  total: totalRowCount ?? 0
+                })
+              }</Typography>
             <Box sx={{
               display: "flex",
               alignItems: "center",
             }}>
-              <Typography variant="body2">Afficher les éléments par :</Typography>
+              <Typography variant="body2">{translate("pages.jobs.list.footerElementsShowCount")}</Typography>
               <Select
                 value={pageSize}
                 sx={{
-                  '.MuiOutlinedInput-notchedOutline': { border: "none" }, // No border
+                  '.MuiOutlinedInput-notchedOutline': { border: "none" },
                   '.MuiSelect-select': {
-                    padding: '10px 20px', // Adjust padding inside the select box
-                    color: '#333',        // Text color
+                    padding: '10px 20px',
+                    color: '#333',
                   },
                   '& .MuiSvgIcon-root': {
-                    color: '#7b1fa2',         // Custom color for the dropdown icon
+                    color: '#7b1fa2',
                   },
                 }}
                 onChange={handlePageSizeChange}
@@ -287,8 +289,6 @@ export const BlogPostList = () => {
           </Box>
         </Box>
       </List>
-
-      <CreateForm open={open} onClose={handleClose} />
     </>
   );
 };

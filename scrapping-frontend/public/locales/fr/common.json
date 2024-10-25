@@ -1,0 +1,371 @@
+{
+  "pages": {
+    "login": {
+      "title": "Se connecter à votre compte",
+      "signin": "Se connecter",
+      "signup": "S'inscrire",
+      "divider": "ou",
+      "fields": {
+        "email": "Adresse de messagerie",
+        "password": "Mot de passe"
+      },
+      "errors": {
+        "validEmail": "Adresse de messagerie invalide",
+        "requiredEmail": "Adresse de messagerie obligatoire",
+        "requiredPassword": "Mot de passe obligatoire"
+      },
+      "buttons": {
+        "submit": "Se connecter",
+        "forgotPassword": "Mot de passe oublié ?",
+        "noAccount": "Pas encore inscrit ?",
+        "rememberMe": "Se souvenir de moi"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "fields": {
+        "email": "Email"
+      },
+      "errors": {
+        "validEmail": "Invalid email address",
+        "requiredEmail": "Email is required"
+      },
+      "buttons": {
+        "submit": "Send reset instructions"
+      }
+    },
+    "register": {
+      "title": "Sign up for your account",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "errors": {
+        "validEmail": "Invalid email address",
+        "requiredEmail": "Email is required",
+        "requiredPassword": "Password is required"
+      },
+      "buttons": {
+        "submit": "Register",
+        "haveAccount": "Have an account?"
+      }
+    },
+    "updatePassword": {
+      "title": "Update password",
+      "fields": {
+        "password": "New Password",
+        "confirmPassword": "Confirm new password"
+      },
+      "errors": {
+        "confirmPasswordNotMatch": "Passwords do not match",
+        "requiredPassword": "Password required",
+        "requiredConfirmPassword": "Confirm password is required"
+      },
+      "buttons": {
+        "submit": "Update"
+      }
+    },
+    "error": {
+      "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
+      "404": "Sorry, the page you visited does not exist.",
+      "resource404": "Are you sure you have created the {{resource}} resource.",
+      "backHome": "Back Home"
+    },
+    "jobs": {
+      "list": {
+        "title": "Liste des tâches",
+        "addNewTask": "Ajouter une nouvelle tâche",
+        "loadingTaskList": "En cours de chargement de la liste des tâches...",
+        "loadingTaskListMessage": "Nous sommes en train de retrouver la liste des tâches qui ont été créées sur la plateforme. Nous vous prions de patienter un moment.",
+        "headerSortInputLabel": "Trier les résultats suivant ...",
+        "headerSortField": {
+          "id": "ID",
+          "name": "Nom",
+          "state": "Etat",
+          "processedOn": "Date de traitement",
+          "finishedOn": "Date de fin",
+          "totalReviews": "Nombre total d'avis",
+          "countReviewsScrapped": "Nombre d'avis scrapés"
+        },
+        "headerSortOrderInputLabel": "Dans l'odre ...",
+        "headerSortOrder": {
+          "ascending": "Croissant",
+          "descending": "Décroissant"
+        },
+        "headerSearchInputLabel": "Rechercher une tâche ...",
+        "headerSearchButton": "Rechercher",
+        "footerElementsCount": "Éléments {{from}}-{{to}} de {{total}}",
+        "footerElementsShowCount": "Afficher les éléments par :",
+        "taskCard": {
+          "state": {
+            "completed": "Terminée",
+            "failed": "Echouée",
+            "unknown": "Non définie"
+          },
+          "startedAt": "Commencée le : {{value}}",
+          "finishedAt": "Finie le : {{value}}",
+          "reviewsTotal": "Avis total : {{value}}",
+          "reviewsScraped": "Avis scrapés : {{value}}"
+        }
+      },
+      "show": {
+        "title": "Détails concernant la tâche {{id}}",
+        "headerButtons": {
+          "listTooltip": "Revenir vers la liste des tâches",
+          "list": "Liste des tâches",
+          "editTooltip": "Modifier",
+          "deleteTooltip": "Supprimer",
+          "launch": "Lancer"
+        },
+        "tab": {
+          "general": {
+            "title": "Informations générales",
+            "id": "ID de la tâche",
+            "name": "Nom de la fil d'attente parent",
+            "url": "URL relatif à la tâche",
+            "state": "Etat",
+            "createdOn": "Date de création",
+            "processedOn": "Date de traitement",
+            "finishedOn": "Términé le",
+            "reviewTotal": "Nombre d'avis total disponible",
+            "reviewCollected": "Nombre d'avis récupéré",
+            "comment": "Commentaire"
+          },
+          "details": {
+            "title": "Détails concernant la page",
+            "name": "Nom de la page",
+            "type": "Type d'activité",
+            "address": "Adresse",
+            "plusCode": "Plus code",
+            "website": "Site web",
+            "phone": "Téléphone",
+            "averageRate": "Note moyenne des avis",
+            "averageRateStarText": "{{average}} étoile{{s}}"
+          },
+          "reviews": {
+            "title": "Avis récoltés",
+            "reviewCard": {
+              "postedOn": "a publié le {{date}}",
+              "noReview": "Aucune note laissée par l'utilisateur",
+              "reviewLinkRedirection": "Cliquez ici pour afficher l'avis dans un nouvel onglet",
+              "reviewSomeNote": "Masquer une partie de l'avis",
+              "reviewFullNote": "Voir l'intégralité de l'avis"
+            }
+          }
+        },
+        "footerElementsCount": "Éléments {{from}}-{{to}} de {{total}}",
+        "footerElementsShowCount": "Afficher les éléments par :"
+      },
+      "create": {
+        "title": "Créer une nouvelle tâche",
+        "nameInputLabel": "Nom de la fil d'attente parent",
+        "urlInputLabel": "URL de la page à scrapper",
+        "commentInputLabel": "Commentaire",
+        "commentInputPlaceholder": "Vous pouvez ajouter un petit commentaire concernant cette tâche",
+        "createdOn": "Date de création de la tâche",
+        "processedOn": "Dernière tentative",
+        "headerButtons": {
+          "list": "Liste des tâches"
+        },
+        "footerButtons": {
+          "save": "Enregistrer la tâche",
+          "cancel": "Annuler"
+        }
+      },
+      "edit": {
+        "title": "Modifier la tâche {{id}}",
+        "headerButtons": {
+          "list": "Liste des tâches",
+          "refresh": "Rafraichir",
+          "delete": "Supprimer"
+        },
+        "footerButtons": {
+          "save": "Enregistrer les modifications",
+          "cancel": "Annuler"
+        }
+      }
+    },
+    "selectors": {
+      "list": {
+        "title": "Liste des selecteurs enregistrés dans la base de données",
+        "headerButtons": {
+          "refresh": "Rafraichir la liste",
+          "create": "Ajouter un nouvel élément"
+        },
+        "selectorCard": {
+          "fullDescription": "Afficher la description complete",
+          "someDescription": "Masquer une partie",
+          "deleteConfirmTitle": "Voulez-vous vraiment supprimer le sélecteur : {{id}} ?",
+          "deleteCancelText": "Annuler",
+          "deleteOkText": "Oui, supprimer"
+        },
+        "headerFilterText": "Filtrer le résultat",
+        "headerFilter": {
+          "id": "ID",
+          "name": "Nom"
+        },
+        "loadingSelectorList": "En cours de chargement de la liste des sélecteurs...",
+        "loadingSelectorListMessage": "Nous sommes en train de retrouver la liste des sélecteurs qui ont été créées sur la plateforme. Nous vous prions de patienter un moment.",
+        "headerSearchInputLabel": "Rechercher un selecteur ou un groupe ...",
+        "headerSearchInputButton": "Rechercher",
+        "headerSortInputLabel": "Trier les résultats suivant ...",
+        "headerSortOrderInputLabel": "Dans l'odre ...",
+        "headerSortOrder": {
+          "ascending": "Croissant",
+          "descending": "Décroissant"
+        },
+        "footerElementsCount": "Éléments {{from}}-{{to}} de {{total}}",
+        "footerElementsShowCount": "Afficher les éléments par :"
+      },
+      "create": {
+        "title": "Créer un nouveau sélecteur",
+        "headerButtons": {
+          "list": "Liste des sélecteurs"
+        },
+        "footerButtons": {
+          "save": "Enregistrer la sélecteur",
+          "cancel": "Annuler"
+        },
+        "nameFieldInputLabel": "Nom",
+        "displayNameFieldInputLabel": "Nom d'affichage",
+        "selectorInputFieldLabel": "Sélecteur",
+        "descriptionInputFieldLabel": "Description",
+        "descriptionInputFieldPlaceholder": "Vous pouvez saisir une petite description du sélecteur ici.",
+        "attributeInputFieldLabel": "Sélectionner un attribut pour le sélecteur ...",
+        "attributeDelimiterInputFieldLabel": "Délimiteur ...",
+        "addAttributeButton": "Ajouter un nouvel attribut"
+      },
+      "edit": {
+        "title": "Modifier le sélecteur {{id}}",
+        "headerButtons": {
+          "list": "Liste des sélecteurs",
+          "refresh": "Rafraichir"
+        },
+        "footerButtons": {
+          "save": "Enregistrer les modifications",
+          "delete": "Supprimer"
+        },
+        "deleteTitle": "Voulez-vous vraiment supprimer le sélecteur : {{id}} ?",
+        "deleteOkButton": "Oui, supprimer",
+        "deleteCancelButton": "Annuler"
+      },
+      "show": {
+        "title": "Détails concernant le selecteur {{id}}",
+        "headerButtons": {
+          "refresh": "Rafraichir",
+          "refreshTooltip": "",
+          "list": "Liste des sélecteurs",
+          "listTooltip": "Cliquez ici pour revenir vers la liste des sélecteurs",
+          "edit": "Modifier",
+          "editTooltip": "Modifier",
+          "delete": "Supprimer",
+          "deleteTooltip": "Supprimer"
+        },
+        "loadingSelectorDetails": "En cours de chargement des éléments...",
+        "loadingSelectorDetailsMessage": "Nous sommes en train de retrouver les détails concernant le sélecteur : <selector/>. Nous vous prions de patienter un moment.",
+        "general": {
+          "title": "Informations générales",
+          "id": "ID",
+          "name": "Nom",
+          "displayName": "Nom d'affichage",
+          "createdOn": "Date de création",
+          "editedOn": "Date de modification",
+          "createdBy": "Créé par",
+          "selector": "Selecteur",
+          "description": "Description",
+          "attribute": "Attribut(s)"
+        },
+        "parent": "Sélecteur parent",
+        "child": "Sélecteur{{s}} enfant{{s}}",
+        "noRelatedLabel": "Aucun élément connexe",
+        "noRelatedMessage": "Il semble que cet élément n'a pas d'autres éléments qui lui sont rattachés. Vous pouvez ajouter cet élément comme enfant ou parent d'un autre en sélectionnant le champs et la valeur appropriés <link/>",
+        "noRelatedLinkRedirect": "sur cette page"
+      },
+      "tags": {
+        "all": "Tous",
+        "group": "Groupe",
+        "array": "Tableau",
+        "text": "Texte",
+        "html": "HTML",
+        "split": "Split",
+        "attribute": "Attribut",
+        "number": "Premier nombre",
+        "json": "JSON"
+      }
+    }
+  },
+  "actions": {
+    "list": "List",
+    "create": "Créer",
+    "edit": "Modifier",
+    "show": "Détails"
+  },
+  "buttons": {
+    "create": "Créer",
+    "save": "Enregistrer",
+    "logout": "Se deconnecter",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "cancel": "Annuler",
+    "confirm": "Etes+vous sur ?",
+    "filter": "Filtrer",
+    "clear": "Effacer",
+    "refresh": "Rafraichir",
+    "show": "Afficher",
+    "undo": "Restaurer",
+    "import": "Importer",
+    "clone": "Copier",
+    "notAccessTitle": "Vous n'avez pas les permissions nécessaires pour cette action"
+  },
+  "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
+  "notifications": {
+    "success": "Successful",
+    "error": "Error (status code: {{statusCode}})",
+    "undoable": "You have {{seconds}} seconds to undo",
+    "createSuccess": "Successfully created {{resource}}",
+    "createError": "There was an error creating {{resource}} (status code: {{statusCode}})",
+    "deleteSuccess": "Successfully deleted {{resource}}",
+    "deleteError": "Error when deleting {{resource}} (status code: {{statusCode}})",
+    "editSuccess": "Successfully edited {{resource}}",
+    "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
+    "importProgress": "Importing: {{processed}}/{{total}}"
+  },
+  "loading": "Loading",
+  "tags": {
+    "clone": "Clone"
+  },
+  "dashboard": {
+    "title": "Dashboard"
+  },
+  "table": {
+    "actions": "Actions"
+  },
+  "documentTitle": {
+    "default": "refine",
+    "suffix": " | Refine",
+    "post": {
+      "list": "Posts | Refine",
+      "show": "#{{id}} Show Post | Refine",
+      "edit": "#{{id}} Edit Post | Refine",
+      "create": "Create new Post | Refine",
+      "clone": "#{{id}} Clone Post | Refine"
+    }
+  },
+  "autoSave": {
+    "success": "saved",
+    "error": "auto save failure",
+    "loading": "saving...",
+    "idle": "waiting for changes"
+  },
+  "test": {
+    "textDummy": "voici"
+  },
+  "menu": {
+    "task": "Tâches",
+    "selector": "Sélecteurs",
+    "queue": "Fil d'attente"
+  },
+  "input": {
+    "required": "Ce champs est obligatoire"
+  }
+}
