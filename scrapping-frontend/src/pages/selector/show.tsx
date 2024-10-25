@@ -41,7 +41,7 @@ export const SelectorShow = () => {
   const { query } = useShow({ resource: "selectors", id });
   const { data, isLoading, isFetching, isError, refetch } = query;
 
-  const [selector, setSelector] = useState<SelectorData>({});
+  const [selector, setSelector] = useState<SelectorData>({} as SelectorData);
   const [parent, setParentSelector] = useState([]);
   const [child, setChildSelector] = useState([]);
 
@@ -55,7 +55,7 @@ export const SelectorShow = () => {
       const parent = data.data.parent ? [data.data.parent] : [];
       const child = data.data.child && data.data.child.length > 0 ? data.data.child : [];
       setSelector(selector);
-      setParentSelector(parent);
+      setParentSelector(parent as never[]);
       setChildSelector(child);
     }
   }, [data]);
@@ -184,7 +184,7 @@ export const SelectorShow = () => {
                               <Typography variant="h6" sx={{ mb: "5px" }}>{translate("pages.selectors.show.parent")}</Typography>
                               <Grid container spacing={2}>
                                 {
-                                  parent.map((item) => (<Grid item sm={12} md={6} lg={12} xl={4} key={item._id}><SelectorCard selector={item}></SelectorCard></Grid>))
+                                  parent.map((item: SelectorData) => (<Grid item sm={12} md={6} lg={12} xl={4} key={item._id}><SelectorCard selector={item}></SelectorCard></Grid>))
                                 }
                               </Grid>
                             </Box>
