@@ -87,3 +87,7 @@ body * {
   border: 1px solid #b248dc !important;
   box-shadow: 0 0 1px 1px #b248dc38;
 }
+
+.task-title{
+  white-space: nowrap;
+}

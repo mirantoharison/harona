@@ -27,21 +27,32 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/jobs/list", async (req, res) => {
-  console.log(req.query)
-
   let query = { ...req.query };
   let result = JSON.parse(fs.readFileSync(path.join(__dirname, sampleFile), "utf-8"));
   let jobs = Array.from(result).map(job => {
     delete job.returnvalue;
     return job;
   });
-  let jobTotalLength = jobs.length;
   let sortOrder = query.sort_order === "asc" ? 1 : -1;
+  let jobTotalLength = jobs.length;
 
-  switch (typeof (jobs[0][query.sort_field] ?? null)) {
-    case "number": jobs = jobs.sort((a, b) => (a[query.sort_field] - b[query.sort_field]) * sortOrder); break;
-    case "string": jobs = jobs.sort((a, b) => (a[query.sort_field].localeCompare(b[query.sort_field])) * sortOrder); break;
-    default: null;
+  if (query.search) {
+    let searchRegexp = createRegex(query.search);
+    jobs = jobs.filter((job) =>
+      searchRegexp.test(job._id) ||
+      searchRegexp.test(job.name) ||
+      searchRegexp.test(job.data.url) ||
+      searchRegexp.test(job.state) ||
+      searchRegexp.test(job.comments)
+    )
+  }
+
+  if (jobs[0]) {
+    switch (typeof (jobs[0][query.sort_field] ?? null)) {
+      case "number": jobs = jobs.sort((a, b) => (a[query.sort_field] - b[query.sort_field]) * sortOrder); break;
+      case "string": jobs = jobs.sort((a, b) => (a[query.sort_field].localeCompare(b[query.sort_field])) * sortOrder); break;
+      default: null;
+    }
   }
 
   if (query.page && query.offset) {
@@ -141,14 +152,6 @@ app.get("/selectors/list", async (req, res) => {
   let query = { ...req.query };
   let selectors = JSON.parse(fs.readFileSync(path.join(__dirname, sampleSelectorFile), "utf-8"));
   let sortOrder = query.sort_order === "asc" ? 1 : -1;
-  let parent;
-
-  /*if (query.parent !== undefined) {
-    query.parent = query.parent.split(",").map(value => Number(value));
-    while (parent = query.parent.shift()) {
-      selectors = selectors[parent];
-    }
-  }*/
 
   if (query.search) {
     let searchRegexp = createRegex(query.search);
@@ -166,7 +169,6 @@ app.get("/selectors/list", async (req, res) => {
   }
 
   let selectorsTotalLength = selectors.length;
-  console.log(query)
 
   if (selectors.length > 0) {
     switch (typeof (selectors[0][query.sort_field] ?? null)) {

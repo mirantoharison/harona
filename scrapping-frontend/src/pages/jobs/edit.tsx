@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParsed } from "@refinedev/core";
 import { DeleteButton, Edit, ListButton, RefreshButton, SaveButton } from "@refinedev/mui";
-import { Typography, Button, Grid, TextField } from "@mui/material";
+import { Typography, Button, Grid, TextField, Box } from "@mui/material";
 import { useForm } from "@refinedev/react-hook-form";
 import { type HttpError, useNavigation, useTranslation } from "@refinedev/core";
 
@@ -64,23 +64,28 @@ export const JobEdit = () => {
   return (
     <Edit
       isLoading={formLoading}
+      wrapperProps={{
+        sx: {
+          '.MuiCardHeader-action': { width: "100%" }
+        }
+      }}
       headerProps={{
-        title: (<Typography variant="h4">{translate("pages.jobs.edit.title", { id })}</Typography>)
+        title: (<Typography variant="h4">{translate("pages.jobs.edit.title", { id })}</Typography>),
+        sx: { rowGap: "10px", flexWrap: "wrap" }
       }}
       headerButtons={({ listButtonProps, refreshButtonProps }) => (
-        <>
+        <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", rowGap: "10px", columnGap: "10px" }}>
           <ListButton {...listButtonProps}>{translate("pages.jobs.edit.headerButtons.list")}</ListButton>
           <RefreshButton {...refreshButtonProps} onClick={() => query?.refetch()}>{translate("pages.jobs.edit.headerButtons.refresh")}</RefreshButton>
           <DeleteButton recordItemId={id}>{translate("pages.jobs.edit.headerButtons.delete")}</DeleteButton>
-        </>
+        </Box>
       )}
       footerButtons={({ saveButtonProps }) => (
         <>
           <SaveButton {...saveButtonProps} children={translate("pages.jobs.edit.footerButtons.save")} variant="contained" color="primary"></SaveButton>
           <Button color="error" variant="contained" onClick={cancel}>{translate("pages.jobs.edit.footerButtons.cancel")}</Button>
         </>
-      )
-      }
+      )}
     >
       <Grid
         container
@@ -89,7 +94,7 @@ export const JobEdit = () => {
         autoComplete="off"
         onSubmit={handleSubmit(onFinish)}
       >
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} md={6} sx={{ width: "100%" }}>
           <TextField
             {...register("name", {
               required: translate("input.required"),
@@ -143,7 +148,7 @@ export const JobEdit = () => {
             value={data?.job?.processedOn ?? ""}
           />
         </Grid>
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} md={6} sx={{ width: "100%" }}>
           <TextField
             {...register("comments")}
             variant="standard"

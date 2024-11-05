@@ -94,13 +94,17 @@
         },
         "headerSearchInputLabel": "Rechercher une tâche ...",
         "headerSearchButton": "Rechercher",
+        "noElementFound": "Aucun élément trouvé",
+        "noElementFoundMessage": "Nous n'avons trouvé aucun élément satisfaisant vos critères.",
         "footerElementsCount": "Éléments {{from}}-{{to}} de {{total}}",
         "footerElementsShowCount": "Afficher les éléments par :",
         "taskCard": {
           "state": {
             "completed": "Terminée",
             "failed": "Echouée",
-            "unknown": "Non définie"
+            "unknown": "Non définie",
+            "wait": "En attente",
+            "active": "En cours"
           },
           "startedAt": "Commencée le : {{value}}",
           "finishedAt": "Finie le : {{value}}",
@@ -158,7 +162,7 @@
       },
       "create": {
         "title": "Créer une nouvelle tâche",
-        "nameInputLabel": "Nom de la fil d'attente parent",
+        "nameInputLabel": "Nom associé à la tâche",
         "urlInputLabel": "URL de la page à scrapper",
         "commentInputLabel": "Commentaire",
         "commentInputPlaceholder": "Vous pouvez ajouter un petit commentaire concernant cette tâche",
@@ -208,6 +212,8 @@
         "loadingSelectorListMessage": "Nous sommes en train de retrouver la liste des sélecteurs qui ont été créées sur la plateforme. Nous vous prions de patienter un moment.",
         "headerSearchInputLabel": "Rechercher un selecteur ou un groupe ...",
         "headerSearchInputButton": "Rechercher",
+        "noElementFound": "Aucun élément trouvé",
+        "noElementFoundMessage": "Nous n'avons trouvé aucun élément satisfaisant vos critères.",
         "headerSortInputLabel": "Trier les résultats suivant ...",
         "headerSortOrderInputLabel": "Dans l'odre ...",
         "headerSortOrder": {
@@ -366,6 +372,7 @@
     "queue": "Fil d'attente"
   },
   "input": {
-    "required": "Ce champs est obligatoire"
+    "required": "Ce champs est obligatoire",
+    "url": "Entrez un URL valide"
   }
 }

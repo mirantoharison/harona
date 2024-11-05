@@ -94,13 +94,17 @@
         },
         "headerSearchInputLabel": "Search for a task...",
         "headerSearchButton": "Search",
+        "noElementFound": "No items found",
+        "noElementFoundMessage": "We couldn't find anything that met your criteria.",
         "footerElementsCount": "Elements {{from}}-{{to}} of {{total}}",
         "footerElementsShowCount": "Show items by:",
         "taskCard": {
           "state": {
             "completed": "Completed",
             "failed": "Failed",
-            "unknown": "Not defined"
+            "unknown": "Not defined",
+            "wait": "Waiting",
+            "active": "In process"
           },
           "startedAt": "Started on: {{value}}",
           "finishedAt": "Finished on: {{value}}",
@@ -158,7 +162,7 @@
       },
       "create": {
         "title": "Create a new task",
-        "nameInputLabel": "Parent queue name",
+        "nameInputLabel": "Name associated with the task",
         "urlInputLabel": "URL of the page to scrape",
         "commentInputLabel": "Comment",
         "commentInputPlaceholder": "You can add a short comment regarding this task",
@@ -208,6 +212,8 @@
         "loadingSelectorListMessage": "We are in the process of finding the list of selectors that were created on the platform. Please wait a moment.",
         "headerSearchInputLabel": "Search for a selector or group...",
         "headerSearchInputButton": "Search",
+        "noElementFound": "No items found",
+        "noElementFoundMessage": "We couldn't find anything that met your criteria.",
         "headerSortInputLabel": "Sort the results ...",
         "headerSortOrderInputLabel": "In order...",
         "headerSortOrder": {
@@ -363,6 +369,7 @@
     "queue": "Queue"
   },
   "input": {
-    "required": "This field is required"
+    "required": "This field is required",
+    "url": "Please provide a valid URL"
   }
 }

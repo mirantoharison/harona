@@ -86,7 +86,7 @@ function App() {
                       canDelete: true,
                     },
                   },
-                  {
+                  /*{
                     name: i18nProvider.translate("menu.selector"),
                     list: "/selector/list",
                     create: "/selector/add",
@@ -107,7 +107,7 @@ function App() {
                     meta: {
                       canDelete: true,
                     },
-                  }
+                  }*/
                 ]}
                 options={{
                   syncWithLocation: true,
@@ -150,12 +150,17 @@ function App() {
                       <Route path="/jobs/update/:id" element={<JobEdit />} />
                       <Route path="/jobs/details/:id" element={<JobShow />} />
                     </Route>
-                    <Route path="/selector">
-                      <Route index path="/selector/list" element={<SelectorConfigList />} />
-                      <Route path="/selector/add" element={<SelectorAdd />} />
-                      <Route path="/selector/details/:id" element={<SelectorShow />} />
-                      <Route path="/selector/update/:id" element={<SelectorEdit />} />
-                    </Route>
+
+                    {
+                      /*
+                      <Route path="/selector">
+                        <Route index path="/selector/list" element={<SelectorConfigList />} />
+                        <Route path="/selector/add" element={<SelectorAdd />} />
+                        <Route path="/selector/details/:id" element={<SelectorShow />} />
+                        <Route path="/selector/update/:id" element={<SelectorEdit />} />
+                      </Route>
+                      */
+                    }
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
                   <Route
