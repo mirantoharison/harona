@@ -1,4 +1,4 @@
-import { Tabs, Tab, Stack, Box, Grid, Select, MenuItem, Typography, Card, CardContent, SxProps, Theme, CircularProgress, Pagination, Button, SelectChangeEvent } from "@mui/material";
+import { Tabs, Tab, Stack, Box, Grid, Select, MenuItem, Typography, Card, CardContent, SxProps, Theme, CircularProgress, Pagination, Button, SelectChangeEvent, useTheme } from "@mui/material";
 import { LinkOutlined, Star, DataObject, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft, PlayArrow } from "@mui/icons-material";
 import { useShow, useParsed, useList, useTranslation } from "@refinedev/core";
 import { StateCell, Tag } from "../../components";
@@ -102,7 +102,7 @@ const TaskDetailContitionalField: React.FC<TaskDetailConditionalFieldProps> = ({
         {
           field.label && field.value ? (
             <Box className="task-details-box" sx={style}>
-              <Typography variant="body1" fontWeight={"bold"}>{field.label} :</Typography>
+              <Typography sx={{flexShrink: 0}} variant="body1" fontWeight={"bold"}>{field.label} :</Typography>
               {isJSXElement ? field.value : isAlphaNumeric ? field.value : ""}
             </Box >
           ) : ("")
@@ -117,6 +117,7 @@ export const JobShow = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
+  const theme = useTheme();
 
   const { translate } = useTranslation();
   const { id } = useParsed();
@@ -156,6 +157,8 @@ export const JobShow = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(Number(newValue));
   };
+
+  console.log(jobData)
 
   return (
     <Show
@@ -265,7 +268,7 @@ export const JobShow = () => {
                   <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.plusCode"), value: companyInfo.plusCode }} />
                   <TaskDetailContitionalField field={{
                     label: translate("pages.jobs.show.tab.details.website"), value: (
-                      <a className="link" href={companyInfo.website || "#"} target="_blank" rel="noopener noreferrer" style={{ display: "flex", columnGap: "8px" }}>
+                      <a className="link" href={companyInfo.website || "#"} target="_blank" rel="noopener noreferrer" style={{ display: "flex", columnGap: "8px", wordBreak: "break-all" }}>
                         <Typography>{companyInfo.website}</Typography>
                         <LinkOutlined />
                       </a>
@@ -317,10 +320,10 @@ export const JobShow = () => {
             ) :
               isLoading ? ("en cours de chargement") :
                 (
-                  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", padding: "50px 0", maxWidth: "400px", margin: "0 auto" }}>
+                  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", padding: "75px 0", maxWidth: "400px", margin: "0 auto" }}>
                     <Box sx={{ height: "fit-content", padding: "20px" }}><DataObject sx={{ scale: 3 }} /></Box>
-                    <Typography variant="h5" sx={{ mb: "10px" }}>Aucun élément à afficher</Typography>
-                    <Typography variant="body1" sx={{ textAlign: "center" }}>Nous n'avons trouvé aucun élément à afficher concernant cette section.</Typography>
+                    <Typography variant="h6" sx={{ mb: "10px" }}>Aucun élément à afficher</Typography>
+                    <Typography variant="body2" sx={{ textAlign: "center" }}>Nous n'avons trouvé aucun élément à afficher concernant cette section.</Typography>
                   </Box>
                 )
           }
@@ -342,10 +345,13 @@ export const JobShow = () => {
                 <>
                   <Box sx={{
                     display: "flex",
-                    placeContent: "space-between",
+                    placeContent: "space-evenly",
                     alignItems: "center",
-                    borderBottom: "1px solid #f5f5f5",
+                    borderTop: "1px solid #f5f5f5",
                     padding: "5px",
+                    flexWrap: "wrap",
+                    columnGap: "10px",
+                    rowGap: "10px"
                   }}>
                     <Pagination
                       count={Math.ceil((reviewData?.total || 0) / pageSize)}
@@ -368,13 +374,12 @@ export const JobShow = () => {
                         value={pageSize}
                         onChange={handlePageSizeChange}
                         sx={{
-                          '.MuiOutlinedInput-notchedOutline': { border: "none" }, // No border
+                          '.MuiOutlinedInput-notchedOutline': { border: "none" },
                           '.MuiSelect-select': {
-                            padding: '10px 20px', // Adjust padding inside the select box
-                            color: '#333',        // Text color
+                            padding: '10px 20px',
                           },
                           '& .MuiSvgIcon-root': {
-                            color: '#7b1fa2',         // Custom color for the dropdown icon
+                            color: '#7b1fa2',
                           },
                         }}
                       >
@@ -384,7 +389,7 @@ export const JobShow = () => {
                       </Select>
                     </Box>
                   </Box>
-                  <Box sx={{ padding: 2, backgroundColor: "#f5f5f5" }}>
+                  <Box sx={{ padding: 2, backgroundColor: theme.palette.mode === "light" ? "#f5f5f5" : "#545454" }}>
                     {!reviewFetching ? (
                       <Grid container spacing={2}>
                         {
@@ -392,7 +397,7 @@ export const JobShow = () => {
                             const reviewWithIndex = { ...review, id: index + (reviewData?.page - 1) * pageSize + 1 } as { id: number } & TaskReviewProps;
 
                             return (
-                              <Grid item sm={12} md={6} lg={4} xl={3} key={reviewWithIndex.id}>
+                              <Grid item sm={12} md={6} lg={4} xl={3} key={reviewWithIndex.id} sx={{width: "100%"}}>
                                 <TaskReviewCard review={reviewWithIndex} />
                               </Grid>
                             );
@@ -406,6 +411,10 @@ export const JobShow = () => {
                           flexDirection: "column",
                           alignItems: "center",
                           justifyContent: "center",
+                          padding: "75px 0",
+                          minWidth: "400px",
+                          width: "50%",
+                          margin: "0 auto",
                           flex: 1
                         }}>
                           <CircularProgress />
@@ -417,8 +426,8 @@ export const JobShow = () => {
               ) : (
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", padding: "75px 0", maxWidth: "400px", margin: "0 auto" }}>
                   <Box sx={{ height: "fit-content", padding: "20px" }}><DataObject sx={{ scale: 3 }} /></Box>
-                  <Typography variant="h5" sx={{ mb: "10px" }}>Aucun élément à afficher</Typography>
-                  <Typography variant="body1" sx={{ textAlign: "center" }}>Nous n'avons trouvé aucun élément à afficher concernant cette section.</Typography>
+                  <Typography variant="h6" sx={{ mb: "10px" }}>Aucun élément à afficher</Typography>
+                  <Typography variant="body2" sx={{ textAlign: "center" }}>Nous n'avons trouvé aucun élément à afficher concernant cette section.</Typography>
                 </Box>
               )
             }

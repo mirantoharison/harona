@@ -1,6 +1,7 @@
 import type { BaseRecord, CrudFilter, DataProvider, DeleteOneResponse } from "@refinedev/core";
+import getApiUrl from "../config";
 
-const API_URL = "http://localhost:3000";
+const API_URL = getApiUrl();
 
 export const dataProvider: DataProvider = {
   getApiUrl: () => API_URL,
@@ -70,8 +71,6 @@ export const dataProvider: DataProvider = {
         "Content-Type": "application/json",
       },
     });
-
-    console.log(variables)
 
     if (response.status < 200 || response.status > 299) throw response;
 

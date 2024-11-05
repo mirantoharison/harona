@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DeleteButton, EditButton, List, ShowButton, RefreshButton } from "@refinedev/mui";
-import { List as ListIcon, Public, Search } from "@mui/icons-material";
-import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagination, Card, CardContent, SxProps, Theme, TextField, InputAdornment, SelectChangeEvent } from "@mui/material";
+import { List as ListIcon, Public, Search, SearchOff } from "@mui/icons-material";
+import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagination, Card, CardContent, SxProps, Theme, TextField, InputAdornment, SelectChangeEvent, useTheme } from "@mui/material";
 import { useList, useTranslation } from "@refinedev/core";
 import { StateCell } from "../../components";
 
@@ -12,7 +12,8 @@ interface TaskProps {
   processedOn: string;
   finishedOn: string;
   data: {
-    url: string
+    url: string;
+    name: string;
   };
   totalReviews: number;
   countReviewsScrapped: number
@@ -26,17 +27,18 @@ interface TaskCardProps {
   canDelete: boolean;
 }
 
-const BlogTaskCard: React.FC<TaskCardProps> = ({ recordId, task, style, canEdit = false, canDelete = false }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ recordId, task, style, canEdit = false, canDelete = false }) => {
   const { translate } = useTranslation();
 
   return (
     <Card sx={{
       ...style,
+      height: "100%",
       "&:hover .hoverable-button-container": { display: "flex" },
     }}>
       <CardContent>
-        <Box sx={{ display: "flex", placeContent: "space-between", mb: "15px" }}>
-          <Typography variant="h4" sx={{ overflow: "hidden", textOverflow: "ellipsis", wordWrap: "nowrap" }}>{task.name}</Typography>
+        <Box sx={{ display: "flex", placeContent: "space-between", mb: "15px", alignItems: "center", height: "40px" }}>
+          <Typography variant="h6" sx={{ overflow: "hidden", textOverflow: "ellipsis" }} className="task-title">{task.data.name ?? task.name}</Typography>
           <Box sx={{ display: "flex", columnGap: "5px", alignItems: "center" }}>
             <Box sx={{ display: "none" }} className="hoverable-button-container">
               <ShowButton hideText recordItemId={recordId} />
@@ -68,21 +70,32 @@ export const JobList = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [totalRowCount, setTotalRowCount] = useState(0);
   const [sort, setSort] = useState("id");
-  const [sortOrder, setSortOrder] = useState(1);
+  const [sortOrder, setSortOrder] = useState(-1);
+  const [search, setSearch] = useState("");
+  const theme = useTheme();
 
-  const { data, isLoading, refetch, } = useList({
+  const { data, isLoading, refetch } = useList({
     resource: "jobs",
     pagination: {
       current: page,
       pageSize: pageSize,
       mode: "server",
     },
+    filters: [
+      {
+        field: "search",
+        operator: "eq",
+        value: search,
+      },
+    ],
     sorters: [{
       field: sort,
       order: sortOrder === 1 ? "asc" : "desc"
     }]
   });
   const { translate } = useTranslation();
+
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const filterArray = [
     { key: "id", label: translate("pages.jobs.list.headerSortField.id") },
@@ -94,18 +107,20 @@ export const JobList = () => {
     { key: "countReviewsScrapped", label: translate("pages.jobs.list.headerSortField.countReviewsScrapped") }
   ];
 
-  useEffect(() => {
-    if (data) {
-      setTotalRowCount(data.total ?? 0);
-    }
-  }, [data]);
-
   const handleRefresh = async () => {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);
   };
-
+  const handleSearchClick = () => {
+    if (searchInputRef.current) {
+      if (search !== searchInputRef.current.value) {
+        setPage(1);
+        setSearch(searchInputRef.current.value);
+      }
+      handleRefresh();
+    }
+  };
   const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
     const newPageSize = Number(event.target.value);
     setPage(1);
@@ -114,13 +129,24 @@ export const JobList = () => {
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
-
   const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSort(event.target.value);
   }
   const handleSortOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSortOrder(Number(event.target.value));
   }
+
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [search]);
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      setTotalRowCount(data?.total || 0);
+    }
+  }, [isLoading, data]);
 
   return (
     <>
@@ -133,12 +159,15 @@ export const JobList = () => {
         }
         headerButtons={({ defaultButtons }) => (
           <>
-            <RefreshButton onClick={handleRefresh} sx={{ display: "flex", alignItems: "center" }}></RefreshButton>
+            <RefreshButton
+              onClick={handleRefresh}
+              sx={{ display: "flex", alignItems: "center", minWidth: "auto" }}
+            />
             {defaultButtons}
           </>
         )}
         headerProps={{
-          style: { padding: "20px", rowGap: "10px" }
+          style: { padding: "20px", rowGap: "10px", placeContent: "space-between" }
         }}
         createButtonProps={{
           children: translate("pages.jobs.list.addNewTask"),
@@ -146,6 +175,12 @@ export const JobList = () => {
         contentProps={{
           style: {
             padding: 0,
+          }
+        }}
+        wrapperProps={{
+          sx: {
+            ".MuiCardHeader-action": { width: "fit-content" },
+            ".MuiCardHeader-action > div": { display: "flex", flexWrap: "wrap" }
           }
         }}
       >
@@ -156,11 +191,12 @@ export const JobList = () => {
             display: "flex",
             flexDirection: "column",
           }}>
-          <Box sx={{ display: "flex", padding: "10px 20px", borderTop: "1px solid #f5f5f5", placeContent: "space-between" }}>
-            <Box sx={{ display: "flex", columnGap: "10px" }}>
+          <Box sx={{ display: "flex", padding: "10px 20px", borderTop: "1px solid #f5f5f5", placeContent: "space-between", width: "100%", flexWrap: "wrap", rowGap: "20px" }}>
+            <Box sx={{ display: "flex", columnGap: "10px", width: "fit-content", rowGap: "10px" }}>
               <TextField
                 variant="standard"
                 type="search"
+                inputRef={searchInputRef}
                 label={translate("pages.jobs.list.headerSearchInputLabel")}
                 InputProps={{
                   startAdornment: (
@@ -170,7 +206,7 @@ export const JobList = () => {
                   ),
                 }} className="custom-input"
               />
-              <Button type="button" sx={{ flex: 1 }}>{translate("pages.jobs.list.headerSearchButton")}</Button>
+              <Button type="button" sx={{ flex: 1 }} onClick={handleSearchClick}>{translate("pages.jobs.list.headerSearchButton")}</Button>
             </Box>
             <Box sx={{ display: "flex", columnGap: "10px" }}>
               <TextField
@@ -204,8 +240,7 @@ export const JobList = () => {
               </TextField>
             </Box>
           </Box>
-          <Box sx={{ padding: 2, backgroundColor: "#f5f5f5" }}>
-
+          <Box sx={{ padding: 2, backgroundColor: theme.palette.mode === "light" ? "#f5f5f5" : "#545454" }}>
             {isLoading || refreshing ? (
               <Box
                 sx={{
@@ -215,6 +250,9 @@ export const JobList = () => {
                   alignItems: "center",
                   textAlign: "center",
                   padding: "50px",
+                  minWidth: "500px",
+                  margin: "0 auto",
+                  width: "50%"
                 }}
               >
                 <CircularProgress />
@@ -223,21 +261,35 @@ export const JobList = () => {
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ width: "50%", minWidth: "400px", marginTop: "10px" }}
+                  sx={{ marginTop: "10px" }}
                 >
                   {translate("pages.jobs.list.loadingTaskListMessage")}
                 </Typography>
               </Box>
             ) : (
-              <Grid container spacing={2}>
-                {
-                  data?.data.map((task, id) => (
-                    <Grid item sm={12} md={6} lg={4} xl={3} key={id}>
-                      <BlogTaskCard recordId={Number(task.id) ?? 0} task={task as TaskProps} canEdit={task.state !== "completed"} canDelete={true} />
-                    </Grid>
-                  ))
-                }
-              </Grid>
+              data && data.data && data?.data.length > 0 ? (
+                <Grid container spacing={2}>
+                  {
+                    data?.data.map((task, id) => (
+                      <Grid item sm={12} md={6} lg={4} xl={3} key={id} sx={{ width: "100%" }}>
+                        <TaskCard recordId={Number(task.id) ?? 0} task={task as TaskProps} canEdit={task.state !== "completed" && task.state !== "active"} canDelete={task.state !== "active"} />
+                      </Grid>
+                    ))
+                  }
+                </Grid>
+              ) : (
+                <Box sx={{
+                  maxWidth: "500px",
+                  margin: "0 auto",
+                  width: "100%"
+                }}>
+                  <Box sx={{ textAlign: "center", padding: "50px", margin: "0 auto" }}>
+                    <SearchOff sx={{ transform: "scale(3)" }}></SearchOff>
+                    <Typography variant="h6" sx={{ mt: "30px" }}>{translate("pages.jobs.list.noElementFound")}</Typography>
+                    <Typography variant="body2" sx={{ mt: "5px" }}>{translate("pages.jobs.list.noElementFoundMessage")}</Typography>
+                  </Box>
+                </Box>
+              )
             )}
           </Box>
           <Box sx={{
@@ -246,23 +298,28 @@ export const JobList = () => {
             alignItems: "center",
             borderTop: "1px solid #f5f5f5",
             padding: "5px",
+            flexWrap: "wrap"
           }}>
             <Pagination
               count={Math.ceil(totalRowCount / pageSize)}
               page={page}
               onChange={handlePageChange}
             />
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{
+              flex: 2,
+              textAlign: "center"
+            }}>
               {
                 translate("pages.jobs.list.footerElementsCount", {
                   from: (page - 1) * pageSize + 1,
                   to: Math.min(page * pageSize, totalRowCount || 0),
                   total: totalRowCount ?? 0
                 })
-              }</Typography>
+              }
+            </Typography>
             <Box sx={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "center"
             }}>
               <Typography variant="body2">{translate("pages.jobs.list.footerElementsShowCount")}</Typography>
               <Select
@@ -271,11 +328,10 @@ export const JobList = () => {
                   '.MuiOutlinedInput-notchedOutline': { border: "none" },
                   '.MuiSelect-select': {
                     padding: '10px 20px',
-                    color: '#333',
                   },
                   '& .MuiSvgIcon-root': {
                     color: '#7b1fa2',
-                  },
+                  }
                 }}
                 onChange={handlePageSizeChange}
               >

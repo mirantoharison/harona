@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { DeleteButton, EditButton, List, ShowButton, ListButton, SaveButton } from "@refinedev/mui";
-import { Box, Typography, Button, Grid, MenuItem, TextField, IconButton } from "@mui/material";
+import { Box, Typography, Button, Grid, MenuItem, TextField, Switch, IconButton } from "@mui/material";
 import { Create } from "@refinedev/mui";
 import { type HttpError, useNavigation, useTranslation } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
@@ -8,6 +8,7 @@ import { useForm } from "@refinedev/react-hook-form";
 interface JobProps {
   name: string;
   url: string;
+  autostart: boolean;
   comments?: string;
 }
 
@@ -46,7 +47,8 @@ export const JobAdd = () => {
     <Create
       isLoading={formLoading}
       headerProps={{
-        title: (<Typography variant="h4">{translate("pages.jobs.create.title")}</Typography>)
+        title: (<Typography variant="h4">{translate("pages.jobs.create.title")}</Typography>),
+        sx: { rowGap: "10px", flexWrap: "wrap" }
       }}
       headerButtons={({ defaultButtons }) => (
         <>
@@ -74,7 +76,7 @@ export const JobAdd = () => {
         autoComplete="off"
         onSubmit={handleSubmit(onFinish)}
       >
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} md={6} sx={{ width: "100%" }}>
           <TextField
             {...register("name", {
               required: translate("input.required"),
@@ -91,7 +93,13 @@ export const JobAdd = () => {
             className="custom-input"
           />
           <TextField
-            {...register("url", { required: true })}
+            {...register("url", {
+              required: true,
+              pattern: {
+                value: /^https?:\/\/(www\.)?(google\.(com|[a-z]{2})(\.[a-z]{2})?\/maps|maps\.app\.goo\.gl)\/[^\s]+$/,
+                message: translate("input.url"),
+              },
+            })}
             variant="standard"
             error={!!errors?.url}
             helperText={<>{errors?.url?.message}</>}
@@ -104,7 +112,7 @@ export const JobAdd = () => {
             className="custom-input"
           />
         </Grid>
-        <Grid item sm={12} md={6}>
+        <Grid item sm={12} md={6} sx={{ width: "100%" }}>
           <TextField
             {...register("comments")}
             variant="standard"
@@ -119,6 +127,7 @@ export const JobAdd = () => {
             className="custom-input"
             multiline={true}
             placeholder={translate("pages.jobs.create.commentInputPlaceholder")}
+            sx={{ width: "100%" }}
           />
         </Grid>
       </Grid>

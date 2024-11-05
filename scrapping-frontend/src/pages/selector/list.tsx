@@ -86,7 +86,7 @@ export const SelectorCard: React.FC<SelectorCardProps> = React.memo(({ selector,
               </Box>
             </Box>
           </Box>
-          <Typography variant="h6" sx={{ minWidth: 0, flex: "1 1 auto", textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden", mb: "5px" }}>{selector.displayName ?? selector.name}</Typography>
+          <Typography variant="h6" sx={{ minWidth: 0, flex: "1 1 auto", textOverflow: "ellipsis", overflow: "hidden", mb: "5px" }} style={{ whiteSpace: "nowrap" }}>{selector.displayName ?? selector.name}</Typography>
           <Typography variant="body2" sx={{ mb: "5px" }}>{selector.name}</Typography>
           <Typography variant="body2" sx={{ mb: "10px", color: "#999999", wordBreak: "break-all" }}>{selector.selector}</Typography>
           <Box sx={{ display: "flex", columnGap: "5px", rowGap: "5px" }}>
@@ -202,15 +202,6 @@ export const SelectorConfigList = () => {
   const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => { setPage(value); };
   const handleSortChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { setSort(event.target.value); }
   const handleSortOrderChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => { setSortOrder(Number(event.target.value)); }
-
-  useEffect(() => {
-    if (data) {
-      setTotalRowCount(data.total ?? 0);
-      setSelectors(data.data as SelectorData[]);
-    }
-  }, [data]);
-
-
 
   useEffect(() => {
     if (!isLoading) {
@@ -364,8 +355,8 @@ export const SelectorConfigList = () => {
               <Box sx={{ width: "100%" }}>
                 <Box sx={{ width: "50%", textAlign: "center", padding: "50px", margin: "0 auto" }}>
                   <SearchOff sx={{ transform: "scale(3)" }}></SearchOff>
-                  <Typography variant="h6" sx={{ mt: "30px" }}>Aucun élément trouvé</Typography>
-                  <Typography variant="body2" sx={{ mt: "5px" }}>Nous n'avons trouvé aucun élément satisfaisant vos critères.</Typography>
+                  <Typography variant="h6" sx={{ mt: "30px" }}>{translate("pages.selectors.list.noElementFound")}</Typography>
+                  <Typography variant="body2" sx={{ mt: "5px" }}>{translate("pages.selectors.list.noElementFoundMessage")}</Typography>
                 </Box>
               </Box>
             )
