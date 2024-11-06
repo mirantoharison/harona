@@ -69,7 +69,9 @@
       "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
       "404": "Sorry, the page you visited does not exist.",
       "resource404": "Are you sure you have created the {{resource}} resource.",
-      "backHome": "Back Home"
+      "backHome": "Back Home",
+      "listMessage": "We encountered a problem loading the data. Please try again later",
+      "listDescription": "Oops..."
     },
     "jobs": {
       "list": {

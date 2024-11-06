@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { DeleteButton, EditButton, List, ShowButton, RefreshButton } from "@refinedev/mui";
-import { List as ListIcon, Public, Search, SearchOff } from "@mui/icons-material";
-import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagination, Card, CardContent, SxProps, Theme, TextField, InputAdornment, SelectChangeEvent, useTheme } from "@mui/material";
-import { useList, useTranslation } from "@refinedev/core";
+import { List as ListIcon, Public, Search, SearchOff, ArrowDropDown, ImportExport } from "@mui/icons-material";
+import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagination, Card, CardContent, SxProps, Theme, TextField, InputAdornment, SelectChangeEvent, useTheme, Menu, IconButton } from "@mui/material";
+import { useCustom, useList, useTranslation } from "@refinedev/core";
 import { StateCell } from "../../components";
+import { dataProvider } from "../../providers/mockDataProvider";
 
 interface TaskProps {
   id: number;
@@ -42,8 +43,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ recordId, task, style, canEdit = fa
           <Box sx={{ display: "flex", columnGap: "5px", alignItems: "center" }}>
             <Box sx={{ display: "none" }} className="hoverable-button-container">
               <ShowButton hideText recordItemId={recordId} />
-              {canEdit ? (<EditButton hideText recordItemId={recordId} />) : null}
-              {canDelete ? (<DeleteButton hideText recordItemId={recordId} />) : null}
+              {/*canEdit ? (<EditButton hideText recordItemId={recordId} />) : null*/}
+              <EditButton hideText recordItemId={recordId} />
+              {canDelete ? (<DeleteButton hideText recordItemId={recordId} resource={"jobs"} />) : null}
             </Box>
             <Typography sx={{ padding: "0 5px", pr: 0 }}>#{task.id}</Typography>
           </Box>
@@ -72,9 +74,21 @@ export const JobList = () => {
   const [sort, setSort] = useState("id");
   const [sortOrder, setSortOrder] = useState(-1);
   const [search, setSearch] = useState("");
+  const [shouldExport, setShouldExport] = useState(false);
+  const [exportAnchorEl, setExportAnchorEl] = useState(null);
+  const [exportType, setExportType] = useState("");
   const theme = useTheme();
 
+  const { translate } = useTranslation();
   const { data, isLoading, refetch } = useList({
+    errorNotification: (error, values, resource) => {
+      console.log(error);
+      return {
+        message: translate("pages.error.listMessage"),
+        description: translate("pages.error.listDescription"),
+        type: "error",
+      };
+    },
     resource: "jobs",
     pagination: {
       current: page,
@@ -93,9 +107,23 @@ export const JobList = () => {
       order: sortOrder === 1 ? "asc" : "desc"
     }]
   });
-  const { translate } = useTranslation();
+  
+  /*const { data: uniqueCheckData, isLoading: isUniqueCheckLoading, isFetched, isSuccess } = useCustom({
+    url: `${dataProvider.getApiUrl()}/jobs/export`,
+    method: "get",
+    config: {
+      query: {
+        info: true,
+        type: exportType
+      }
+    },
+    queryOptions: {
+      enabled: shouldExport,
+    },
+  });*/
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const listWrapperRef = useRef<HTMLDivElement>(null);
 
   const filterArray = [
     { key: "id", label: translate("pages.jobs.list.headerSortField.id") },
@@ -127,7 +155,9 @@ export const JobList = () => {
     setPageSize(newPageSize);
   };
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
+    if (value !== page) {
+      setPage(value);
+    }
   };
   const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSort(event.target.value);
@@ -135,6 +165,43 @@ export const JobList = () => {
   const handleSortOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSortOrder(Number(event.target.value));
   }
+  const handleScrollToTarget = () => {
+    listWrapperRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  /*const handleExportOpen = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    if (event.currentTarget.parentElement) {
+      setExportAnchorEl(event.currentTarget.parentElement);
+    }
+  }
+  const handleExportChoice = (value: string) => {
+    handleExportClose();
+    if (value !== exportType) {
+      setShouldExport(true);
+      setExportType(value);
+    }
+  }
+  const handleExportClose = () => {
+    setExportAnchorEl(null);
+  }
+
+  const handleExport = () => {
+    setShouldExport(true);
+  }*/
+
+  /*useEffect(() => {
+    if (shouldExport && isSuccess) {
+      setShouldExport(false);
+    }
+  }, [shouldExport, isSuccess]);*/
+
+  useEffect(() => {
+    handleScrollToTarget();
+  }, [page]);
 
   useEffect(() => {
     if (searchInputRef.current) {
@@ -163,6 +230,27 @@ export const JobList = () => {
               onClick={handleRefresh}
               sx={{ display: "flex", alignItems: "center", minWidth: "auto" }}
             />
+            {
+              /*<Box>
+              <Button variant="outlined" onClick={handleExport} sx={{ pl: "5px", pr: "5px" }}>
+                <ImportExport sx={{ scale: .8, mr: "5px" }} />
+                {exportType ? `Exporter en ${exportType}` : 'Choisir une option pour exporter'}
+                <IconButton onClick={handleExportOpen} size="small" sx={{ marginLeft: 1, padding: 0 }}>
+                  <ArrowDropDown />
+                </IconButton>
+              </Button>
+              <Menu
+                anchorEl={exportAnchorEl}
+                open={Boolean(exportAnchorEl)}
+                onClose={handleExportClose}
+              >
+                <MenuItem onClick={() => handleExportChoice("json")}><Typography variant="body2">Exporter en JSON</Typography></MenuItem>
+                <MenuItem onClick={() => handleExportChoice("xls")}><Typography variant="body2">Exporter en XLS</Typography></MenuItem>
+                <MenuItem onClick={() => handleExportChoice("xlsx")}><Typography variant="body2">Exporter en XLSX</Typography></MenuItem>
+              </Menu>
+            </Box>
+            */
+            }
             {defaultButtons}
           </>
         )}
@@ -178,6 +266,7 @@ export const JobList = () => {
           }
         }}
         wrapperProps={{
+          ref: listWrapperRef,
           sx: {
             ".MuiCardHeader-action": { width: "fit-content" },
             ".MuiCardHeader-action > div": { display: "flex", flexWrap: "wrap" }
@@ -250,9 +339,9 @@ export const JobList = () => {
                   alignItems: "center",
                   textAlign: "center",
                   padding: "50px",
-                  minWidth: "500px",
+                  maxWidth: "500px",
                   margin: "0 auto",
-                  width: "50%"
+                  width: "100%"
                 }}
               >
                 <CircularProgress />
@@ -294,10 +383,10 @@ export const JobList = () => {
           </Box>
           <Box sx={{
             display: "flex",
-            placeContent: "space-between",
+            placeContent: "space-evenly",
             alignItems: "center",
             borderTop: "1px solid #f5f5f5",
-            padding: "5px",
+            padding: "10px 20px",
             flexWrap: "wrap"
           }}>
             <Pagination
@@ -306,7 +395,7 @@ export const JobList = () => {
               onChange={handlePageChange}
             />
             <Typography variant="body2" sx={{
-              flex: 2,
+              padding: "0 20px",
               textAlign: "center"
             }}>
               {

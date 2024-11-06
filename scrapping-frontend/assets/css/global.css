@@ -20,24 +20,6 @@ body * {
   text-decoration: underline;
 }
 
-.task {
-    padding: 1px;
-    padding-right: 10px;
-    border-radius: 20px;
-    border: 1px solid #959595;
-}
-
-.task-details-section{
-  padding: 25px 15px;
-}
-
-.task-details-box{
-    display: flex;
-    flex-direction: row;
-    column-gap: 10px;
-    align-items: flex-start;
-}
-
 .star-container{
   border-radius: 5px;
   padding: 1px 4px;
@@ -86,6 +68,27 @@ body * {
 .tag-active{
   border: 1px solid #b248dc !important;
   box-shadow: 0 0 1px 1px #b248dc38;
+}
+
+
+.task {
+  padding: 1px;
+  padding-right: 10px;
+  border-radius: 20px;
+  border: 1px solid #959595;
+}
+
+.task-details-section{
+padding: 25px 15px;
+}
+
+.task-details-box{
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  row-gap: 10px;
 }
 
 .task-title{

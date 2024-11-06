@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParsed } from "@refinedev/core";
+import { useDelete, useParsed } from "@refinedev/core";
 import { DeleteButton, Edit, ListButton, RefreshButton, SaveButton } from "@refinedev/mui";
 import { Typography, Button, Grid, TextField, Box } from "@mui/material";
 import { useForm } from "@refinedev/react-hook-form";
@@ -7,7 +7,7 @@ import { type HttpError, useNavigation, useTranslation } from "@refinedev/core";
 
 interface JobProps {
   name: string;
-  data: { url: string };
+  data: { url: string, name: string };
   comments?: string;
   timestamp: string;
   processedOn?: string;
@@ -27,6 +27,7 @@ export const JobEdit = () => {
     refineCore: { query, formLoading, onFinish },
     handleSubmit,
     register,
+    saveButtonProps,
     formState: { errors },
     setValue,
   } = useForm<JobDetailsProps, HttpError, JobProps>({
@@ -40,26 +41,43 @@ export const JobEdit = () => {
       onMutationSuccess() {
         setTimeout(() => {
           push("/jobs/list");
-        }, 3000)
+        }, 1000);
       },
     },
   });
+
+  const { mutate: deleteJob, isSuccess } = useDelete();
+
+  const deleteItem = (id: number) => {
+    deleteJob({
+      resource: "jobs",
+      id: id,
+    });
+  };
 
   const cancel = () => {
     push("/jobs/list");
   }
 
   useEffect(() => {
-    const task = query?.data?.data;
-    if (task) {
-      const formFields = ["data", "name", "comments"];
-      formFields.forEach((field) => {
-        const typedKey = field as keyof JobProps;
-        setValue(typedKey, task.job[typedKey]);
-      });
-      setData(task);
+    if (data === null) {
+      const task = query?.data?.data;
+      if (task) {
+        const formFields = ["data", "name", "comments"];
+        formFields.forEach((field) => {
+          const typedKey = field as keyof JobProps;
+          setValue(typedKey, task.job[typedKey]);
+        });
+        setData(task);
+      }
     }
   }, [query, setValue]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      push("/jobs/list");
+    }
+  }, [isSuccess]);
 
   return (
     <Edit
@@ -77,12 +95,12 @@ export const JobEdit = () => {
         <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", rowGap: "10px", columnGap: "10px" }}>
           <ListButton {...listButtonProps}>{translate("pages.jobs.edit.headerButtons.list")}</ListButton>
           <RefreshButton {...refreshButtonProps} onClick={() => query?.refetch()}>{translate("pages.jobs.edit.headerButtons.refresh")}</RefreshButton>
-          <DeleteButton recordItemId={id}>{translate("pages.jobs.edit.headerButtons.delete")}</DeleteButton>
+          <DeleteButton recordItemId={id} resource={"jobs"} onClick={() => deleteItem(id as number)}>{translate("pages.jobs.edit.headerButtons.delete")}</DeleteButton>
         </Box>
       )}
-      footerButtons={({ saveButtonProps }) => (
+      footerButtons={() => (
         <>
-          <SaveButton {...saveButtonProps} children={translate("pages.jobs.edit.footerButtons.save")} variant="contained" color="primary"></SaveButton>
+          <SaveButton {...saveButtonProps} resource={"jobs"} children={translate("pages.jobs.edit.footerButtons.save")} variant="contained" color="primary"></SaveButton>
           <Button color="error" variant="contained" onClick={cancel}>{translate("pages.jobs.edit.footerButtons.cancel")}</Button>
         </>
       )}
@@ -96,7 +114,7 @@ export const JobEdit = () => {
       >
         <Grid item sm={12} md={6} sx={{ width: "100%" }}>
           <TextField
-            {...register("name", {
+            {...register("data.name", {
               required: translate("input.required"),
             })}
             variant="standard"
