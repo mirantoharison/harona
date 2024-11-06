@@ -66,10 +66,12 @@
       }
     },
     "error": {
-      "info": "You may have forgotten to add the {{action}} component to {{resource}} resource.",
-      "404": "Sorry, the page you visited does not exist.",
-      "resource404": "Are you sure you have created the {{resource}} resource.",
-      "backHome": "Back Home"
+      "info": "Vous avez peut-être oublié d'ajouter le composant {{action}} à la ressource {{resource}}.",
+      "404": "Désolé, la page que vous avez visitée n'existe pas.",
+      "resource404": "Êtes-vous sûr d'avoir créé la ressource {{resource}} ?",
+      "backHome": "Retour à l'accueil",
+      "listMessage": "Nous avons rencontré un problème lors du chargement des données. Nous vous invitons à réessayer plus tard",
+      "listDescription": "Oops ..."
     },
     "jobs": {
       "list": {

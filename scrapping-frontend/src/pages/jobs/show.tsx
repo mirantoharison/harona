@@ -102,8 +102,8 @@ const TaskDetailContitionalField: React.FC<TaskDetailConditionalFieldProps> = ({
         {
           field.label && field.value ? (
             <Box className="task-details-box" sx={style}>
-              <Typography sx={{flexShrink: 0}} variant="body1" fontWeight={"bold"}>{field.label} :</Typography>
-              {isJSXElement ? field.value : isAlphaNumeric ? field.value : ""}
+              <Typography sx={{ wordBreak: "break-all" }} variant="body2" fontWeight={"bold"}>{field.label} :</Typography>
+              {isJSXElement ? field.value : isAlphaNumeric ? (<Typography variant="body2" sx={{ wordBreak: "break-all" }}>{field.value}</Typography>) : ""}
             </Box >
           ) : ("")
         }
@@ -181,7 +181,7 @@ export const JobShow = () => {
         editButtonProps,
         listButtonProps,
       }) => (
-        <>
+        <Box sx={{ display: "flex", flexWrap: "wrap", columnGap: "10px", rowGap: "10px" }}>
           {listButtonProps && (
             <ListButton {...listButtonProps} title={translate("pages.jobs.show.headerButtons.listTooltip")}>{translate("pages.jobs.show.headerButtons.list")}</ListButton>
           )}
@@ -192,13 +192,20 @@ export const JobShow = () => {
           {deleteButtonProps && (
             <DeleteButton {...deleteButtonProps} title={translate("pages.jobs.show.headerButtons.deleteTooltip")}></DeleteButton>
           )}
-        </>
+        </Box>
       )}
       footerButtonProps={{
         style: {
           padding: 0,
           margin: 0
         },
+      }}
+      wrapperProps={{
+        sx: {
+          ".MuiCardHeader-action": {
+            width: "100%"
+          }
+        }
       }}
       contentProps={{
         sx: {
@@ -238,7 +245,7 @@ export const JobShow = () => {
                   label: translate("pages.jobs.show.tab.general.url") as string,
                   value: (
                     <a href={jobData.data.url || "#"} target="_blank" style={{ display: "flex", columnGap: "8px" }} rel="noopener noreferrer" className="link">
-                      <Typography>{jobData.data.url}</Typography>
+                      <Typography variant="body2" sx={{ wordBreak: "break-all" }}>{jobData.data.url}</Typography>
                       <LinkOutlined />
                     </a>
                   )
@@ -269,7 +276,7 @@ export const JobShow = () => {
                   <TaskDetailContitionalField field={{
                     label: translate("pages.jobs.show.tab.details.website"), value: (
                       <a className="link" href={companyInfo.website || "#"} target="_blank" rel="noopener noreferrer" style={{ display: "flex", columnGap: "8px", wordBreak: "break-all" }}>
-                        <Typography>{companyInfo.website}</Typography>
+                        <Typography variant="body2">{companyInfo.website}</Typography>
                         <LinkOutlined />
                       </a>
                     )
@@ -397,7 +404,7 @@ export const JobShow = () => {
                             const reviewWithIndex = { ...review, id: index + (reviewData?.page - 1) * pageSize + 1 } as { id: number } & TaskReviewProps;
 
                             return (
-                              <Grid item sm={12} md={6} lg={4} xl={3} key={reviewWithIndex.id} sx={{width: "100%"}}>
+                              <Grid item sm={12} md={6} lg={4} xl={3} key={reviewWithIndex.id} sx={{ width: "100%" }}>
                                 <TaskReviewCard review={reviewWithIndex} />
                               </Grid>
                             );
