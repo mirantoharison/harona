@@ -1,6 +1,6 @@
 import { Tabs, Tab, Stack, Box, Grid, Select, MenuItem, Typography, Card, CardContent, SxProps, Theme, CircularProgress, Pagination, Button, SelectChangeEvent, useTheme } from "@mui/material";
 import { LinkOutlined, Star, DataObject, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft, PlayArrow } from "@mui/icons-material";
-import { useShow, useParsed, useList, useTranslation, useCustom } from "@refinedev/core";
+import { useShow, useParsed, useList, useTranslation, useCustom, useNavigation } from "@refinedev/core";
 import { StateCell, Tag } from "../../components";
 import {
   Show,
@@ -122,6 +122,7 @@ export const JobShow = () => {
   const theme = useTheme();
 
   const { translate } = useTranslation();
+  const { push } = useNavigation();
   const { id } = useParsed();
   const { query } = useShow({ resource: "jobs", id });
   const { data, isLoading, isFetching, isError, refetch } = query;
