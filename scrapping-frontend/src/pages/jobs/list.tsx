@@ -43,8 +43,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ recordId, task, style, canEdit = fa
           <Box sx={{ display: "flex", columnGap: "5px", alignItems: "center" }}>
             <Box sx={{ display: "none" }} className="hoverable-button-container">
               <ShowButton hideText recordItemId={recordId} />
-              {/*canEdit ? (<EditButton hideText recordItemId={recordId} />) : null*/}
-              <EditButton hideText recordItemId={recordId} />
+              {canEdit ? (<EditButton hideText recordItemId={recordId} />) : null}
+              {/*<EditButton hideText recordItemId={recordId} />*/}
               {canDelete ? (<DeleteButton hideText recordItemId={recordId} resource={"jobs"} />) : null}
             </Box>
             <Typography sx={{ padding: "0 5px", pr: 0 }}>#{task.id}</Typography>
@@ -52,7 +52,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ recordId, task, style, canEdit = fa
         </Box>
         <Box sx={{ wordWrap: "break-word", wordBreak: "break-all", display: "flex", alignItems: "center", columnGap: "5px", pb: "10px", mb: "10px", borderBottom: "1px solid #f5f5f5" }}>
           <Public className="link" sx={{ scale: .6 }} />
-          <a href={task.data.url ?? "#"} className="link">{task.data.url ?? "Lien vers l'avis"}</a>
+          <a href={task.data.url ?? "#"} target="_blank" className="link">{task.data.url ?? "Lien vers l'avis"}</a>
         </Box>
         <StateCell row={task} />
         <Box sx={{ mt: "10px" }}>
@@ -107,7 +107,7 @@ export const JobList = () => {
       order: sortOrder === 1 ? "asc" : "desc"
     }]
   });
-  
+
   /*const { data: uniqueCheckData, isLoading: isUniqueCheckLoading, isFetched, isSuccess } = useCustom({
     url: `${dataProvider.getApiUrl()}/jobs/export`,
     method: "get",

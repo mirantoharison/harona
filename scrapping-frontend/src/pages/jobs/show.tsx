@@ -1,6 +1,6 @@
 import { Tabs, Tab, Stack, Box, Grid, Select, MenuItem, Typography, Card, CardContent, SxProps, Theme, CircularProgress, Pagination, Button, SelectChangeEvent, useTheme } from "@mui/material";
 import { LinkOutlined, Star, DataObject, KeyboardDoubleArrowRight, KeyboardDoubleArrowLeft, PlayArrow } from "@mui/icons-material";
-import { useShow, useParsed, useList, useTranslation } from "@refinedev/core";
+import { useShow, useParsed, useList, useTranslation, useCustom } from "@refinedev/core";
 import { StateCell, Tag } from "../../components";
 import {
   Show,
@@ -10,6 +10,7 @@ import {
   ExportButton,
 } from "@refinedev/mui";
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import { dataProvider } from "../../providers/mockDataProvider";
 
 interface TaskDetailConditionalFieldProps {
   style?: SxProps<Theme>;
@@ -117,6 +118,7 @@ export const JobShow = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
+  const [canRetry, setCanRetry] = useState(false);
   const theme = useTheme();
 
   const { translate } = useTranslation();
@@ -142,6 +144,35 @@ export const JobShow = () => {
     ]
   });
 
+  const { data: retryData, isLoading: retryLoading, isFetching: retryFetching, isRefetching: retryRefetching, isSuccess } = useCustom({
+    url: `${dataProvider.getApiUrl()}/jobs/retry`,
+    method: "get",
+    config: {
+      query: { id }
+    },
+    queryOptions: {
+      enabled: canRetry,
+    },
+    successNotification: (data, values) => {
+      setTimeout(() => {
+        push("/jobs/list");
+      }, 3000);
+
+      return {
+        message: translate("pages.error.retryMessage"),
+        description: translate("pages.error.retryDescription"),
+        type: "success",
+      };
+    },
+    errorNotification: (data, values) => {
+      return {
+        message: translate("pages.error.retryMessage"),
+        description: translate("pages.error.retryDescription"),
+        type: "error",
+      };
+    },
+  });
+
   const maxReviewRatingCount = Math.max(...Object.values(companyInfo?.ratings ?? {}) as number[]);
 
   const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
@@ -158,11 +189,20 @@ export const JobShow = () => {
     setActiveTab(Number(newValue));
   };
 
-  console.log(jobData)
+  const handleRetry = (id: number) => {
+    setCanRetry(true);
+  }
+
+  useEffect(() => {
+    if (canRetry && isSuccess) {
+      setCanRetry(false);
+    }
+  }, [canRetry, isSuccess])
+
 
   return (
     <Show
-      isLoading={isLoading}
+      isLoading={isLoading || retryFetching || retryRefetching}
       canDelete={true}
       canEdit={jobData?.state !== 'completed'}
       title={
@@ -188,7 +228,10 @@ export const JobShow = () => {
           {editButtonProps && (
             <EditButton {...editButtonProps} title={translate("pages.jobs.show.headerButtons.editTooltip")}></EditButton>
           )}
-          <Button sx={{ display: "flex", gap: .8, alignItems: "center" }}><PlayArrow />{translate("pages.jobs.show.headerButtons.launch")}</Button>
+          {
+            (jobData?.state === 'completed' || jobData?.state === 'failed') &&
+            (<Button sx={{ display: "flex", gap: .8, alignItems: "center" }} onClick={() => handleRetry(id as number)}><PlayArrow />{translate("pages.jobs.show.headerButtons.launch")}</Button>)
+          }
           {deleteButtonProps && (
             <DeleteButton {...deleteButtonProps} title={translate("pages.jobs.show.headerButtons.deleteTooltip")}></DeleteButton>
           )}
