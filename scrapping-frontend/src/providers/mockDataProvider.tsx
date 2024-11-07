@@ -100,8 +100,12 @@ export const dataProvider: DataProvider = {
     meta,
   }) => {
     try {
-      let params = [];
-      for (const [key, value] of Object.entries(query)) {
+      interface Query {
+        [key: string]: string | number | boolean;
+      }
+      
+      let params: string[] = [];
+      for (const [key, value] of Object.entries(query as Query)) {
         params.push(`${key}=${value.toString()}`);
       }
 
