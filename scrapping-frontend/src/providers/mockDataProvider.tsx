@@ -106,7 +106,8 @@ export const dataProvider: DataProvider = {
       
       let params: string[] = [];
       for (const [key, value] of Object.entries(query as Query)) {
-        params.push(`${key}=${value.toString()}`);
+        const valueString = value?.toString();
+        params.push(`${key}=${valueString}`);
       }
 
       const response = await fetch(`${url}?${params.join("&")}`);
