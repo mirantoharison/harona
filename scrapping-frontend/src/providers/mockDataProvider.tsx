@@ -89,7 +89,7 @@ export const dataProvider: DataProvider = {
 
     return { data };
   },
-  /*custom: async ({
+  custom: async ({
     url,
     method,
     filters,
@@ -99,13 +99,22 @@ export const dataProvider: DataProvider = {
     headers,
     meta,
   }) => {
-    let params = [];
-    for(const [key, value] of Object.entries(query)){
-      params.push(`${key}=${value.toString()}`);
+    try {
+      let params = [];
+      for (const [key, value] of Object.entries(query)) {
+        params.push(`${key}=${value.toString()}`);
+      }
+
+      const response = await fetch(`${url}?${params.join("&")}`);
+
+      if (response.status < 200 || response.status > 299) throw response;
+  
+      const data = await response.json();
+
+      return data;
     }
-
-    await fetch(`${url}?${params.join("&")}`);
-
-    return true;
-  }*/
+    catch (err) {
+      throw err;
+    }
+  }
 };
