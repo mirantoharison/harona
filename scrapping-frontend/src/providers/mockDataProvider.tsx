@@ -100,9 +100,14 @@ export const dataProvider: DataProvider = {
     meta,
   }) => {
     try {
-      let params = [];
-      for (const [key, value] of Object.entries(query)) {
-        params.push(`${key}=${value.toString()}`);
+      interface Query {
+        [key: string]: string | number | boolean;
+      }
+      
+      let params: string[] = [];
+      for (const [key, value] of Object.entries(query as Query)) {
+        const valueString = value?.toString();
+        params.push(`${key}=${valueString}`);
       }
 
       const response = await fetch(`${url}?${params.join("&")}`);
