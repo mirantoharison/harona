@@ -2,23 +2,17 @@
   "pages": {
     "login": {
       "title": "Se connecter à votre compte",
-      "signin": "Se connecter",
-      "signup": "S'inscrire",
+      "button": "Se connecter",
+      "buttonLoad": "Chargement ...",
+      "forgotPassword": "Mot de passe oublié ?",
+      "resetPassword": "Réinitialisez le ici",
+      "noaccount": "Vous avez n'avez pas de compte ?",
+      "sign": "Inscrivez-vous ici",
       "divider": "ou",
       "fields": {
-        "email": "Adresse de messagerie",
-        "password": "Mot de passe"
-      },
-      "errors": {
-        "validEmail": "Adresse de messagerie invalide",
-        "requiredEmail": "Adresse de messagerie obligatoire",
-        "requiredPassword": "Mot de passe obligatoire"
-      },
-      "buttons": {
-        "submit": "Se connecter",
-        "forgotPassword": "Mot de passe oublié ?",
-        "noAccount": "Pas encore inscrit ?",
-        "rememberMe": "Se souvenir de moi"
+        "emailLabel": "Adresse de messagerie",
+        "passwordLabel": "Mot de passe",
+        "remembermeLabel": "Se souvenir de moi"
       }
     },
     "forgotPassword": {
@@ -35,19 +29,15 @@
       }
     },
     "register": {
-      "title": "Sign up for your account",
+      "title": "Enregistrez-vous en tant qu'utilisateur",
+      "registered": "Vous avez déjà un compte ?",
+      "connect": "Connectez-vous ici",
+      "button": "Créer le compte",
+      "buttonLoad": "Chargement ...",
       "fields": {
-        "email": "Email",
-        "password": "Password"
-      },
-      "errors": {
-        "validEmail": "Invalid email address",
-        "requiredEmail": "Email is required",
-        "requiredPassword": "Password is required"
-      },
-      "buttons": {
-        "submit": "Register",
-        "haveAccount": "Have an account?"
+        "emailLabel": "Adresse de messagerie",
+        "passwordLabel": "Mot de passe",
+        "passwordConfirmLabel": "Confirmation du mot de passe"
       }
     },
     "updatePassword": {
@@ -377,6 +367,11 @@
   },
   "input": {
     "required": "Ce champs est obligatoire",
-    "url": "Entrez un URL valide"
+    "url": "Entrez un URL valide",
+    "password": "Le mot de passe est requis",
+    "passwordConfirm": "La confirmation du mot de passe est requise",
+    "passwordDifferent": "Les mots de passe ne correspondent pas",
+    "email": "L'email est requis",
+    "emailValid": "Entrez une adresse Email invalide"
   }
 }

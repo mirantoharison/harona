@@ -361,7 +361,11 @@ export const JobList = () => {
                   {
                     data?.data.map((task, id) => (
                       <Grid item sm={12} md={6} lg={4} xl={3} key={id} sx={{ width: "100%" }}>
-                        <TaskCard recordId={Number(task.id) ?? 0} task={task as TaskProps} canEdit={task.state !== "completed" && task.state !== "active"} canDelete={task.state !== "active"} />
+                        <TaskCard 
+                        recordId={Number(task.id) ?? 0} 
+                        task={task as TaskProps} 
+                        canEdit={task.state !== "completed" && task.state !== "active"} 
+                        canDelete={task.state !== "active"} />
                       </Grid>
                     ))
                   }

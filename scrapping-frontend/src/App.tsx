@@ -39,9 +39,13 @@ import {
   SelectorAdd,
   SelectorEdit
 } from "./pages/selector";
+
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
+import { RegisterPage } from "./pages/register/register";
+import { LoginPage } from "./pages/login/login";
+import { authProvider as customAuthProvider } from "./providers/mockAuthProvider";
 
 import { Settings, Google, Queue } from "@mui/icons-material";
 import { Typography } from "@mui/material";
@@ -74,7 +78,7 @@ function App() {
                 dataProvider={dataProvider}
                 notificationProvider={notificationProvider}
                 routerProvider={routerBindings}
-                authProvider={authProvider}
+                authProvider={customAuthProvider}
                 resources={[
                   {
                     name: i18nProvider.translate("menu.task"),
@@ -143,7 +147,7 @@ function App() {
                       </Authenticated>
                     }
                   >
-                    <Route path="/" element={<Navigate to="/jobs/list" />} />
+                    <Route index path="/" element={<Navigate to="/jobs/list" />} />
                     <Route path="/jobs">
                       <Route index path="/jobs/list" element={<JobList />} />
                       <Route path="/jobs/add" element={<JobAdd />} />
@@ -173,8 +177,8 @@ function App() {
                       </Authenticated>
                     }
                   >
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
                     <Route
                       path="/forgot-password"
                       element={<ForgotPassword />}

@@ -1,0 +1,114 @@
+import { TextField, Button, Box, Typography, Checkbox, FormControlLabel } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
+import { useLogin, useNavigation, useNotification, useTranslation } from "@refinedev/core";
+import { MouseEventHandler, useEffect } from "react";
+import { LanguageChange } from "../../components/language";
+
+interface userData {
+  email: string;
+  password: string;
+  save: boolean;
+}
+
+const LoginForm = () => {
+  const { open } = useNotification();
+  const { replace } = useNavigation();
+  const { mutateAsync: login, isLoading, } = useLogin<userData>();
+  const { register, handleSubmit, formState: { errors }, control, setValue } = useForm<userData>();
+  const { translate } = useTranslation();
+
+  const savedEmail = localStorage.getItem("auth_usermail");
+
+  const onSubmit = async (data: userData, event?: React.BaseSyntheticEvent) => {
+    event?.preventDefault();
+    try {
+      // Appel de la logique de connexion après validation
+      login({
+        email: data.email,
+        password: data.password,
+        save: data.save
+      }).then((data) => {
+        if (data.success && data.token) {
+          localStorage.setItem("auth_token", data?.token as string);
+          replace("/");
+        }
+      });
+    } catch (error: any) {
+      open?.({
+        key: "account-login-error",
+        type: "error",
+        message: "Erreur lors de la connexion au compte",
+        description: error.message,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (savedEmail) {
+      setValue("email", savedEmail);
+    }
+  }, [savedEmail]);
+
+  return (
+    <Box
+      component="form"
+      onSubmit={handleSubmit(onSubmit)}
+      sx={{ display: "flex", flexDirection: "column", gap: 3, width: "100%", maxWidth: "500px", margin: "0 auto" }}>
+      <TextField
+        label={translate("pages.login.fields.emailLabel")}
+        variant="standard"
+        InputLabelProps={{ shrink: true }}
+        {...register("email", { required: translate("input.email"), pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, message: translate("input.emailValid") } })}
+        error={!!errors.email}
+        helperText={errors.email?.message}
+        className="custom-input"
+      />
+      <TextField
+        type="password"
+        label={translate("pages.login.fields.passwordLabel")}
+        variant="standard"
+        InputLabelProps={{ shrink: true }}
+        {...register("password", { required: translate("input.password") })}
+        error={!!errors.password}
+        helperText={errors.password?.message}
+        className="custom-input"
+      />
+      <Controller
+        name="save"
+        control={control}
+        render={({ field }) => (
+          <FormControlLabel
+            sx={{ alignItems: "center" }}
+            control={<Checkbox {...field} />}
+            label={(<Typography variant="body2">{translate("pages.login.fields.remembermeLabel")}</Typography>)}
+          />
+        )}
+      />
+      <Button type="submit" variant="contained" disabled={isLoading}>
+        {isLoading ? translate("pages.login.buttonLoad") : translate("pages.login.button")}
+      </Button>
+    </Box>
+  );
+};
+
+export const LoginPage = () => {
+  const { translate } = useTranslation();
+  const { replace } = useNavigation();
+
+  const handleRedirectRegister: MouseEventHandler<HTMLAnchorElement> = (event) => {
+    event.preventDefault();
+    replace("/register");
+  };
+
+  return (
+    <div style={{ width: "40%", minWidth: "400px", maxWidth: "600px", margin: "0 auto", borderRadius: "10px", padding: "50px 0", display: "flex", flexDirection: "column", rowGap: "10px" }}>
+      <Box sx={{display: "flex", justifyContent: "flex-end", mb: 4}}>
+        <LanguageChange />
+      </Box>
+      <Typography variant="h3" fontWeight={"bold"} sx={{ mb: "40px", textAlign: "center" }}>{translate("pages.login.title")}</Typography>
+      <LoginForm />
+      <Typography variant="body2" sx={{ textAlign: "center", mt: "20px" }}>{translate("pages.login.forgotPassword")} <a href="#" className="link">{translate("pages.login.resetPassword")}</a></Typography>
+      <Typography variant="body2" sx={{ textAlign: "center" }}>{translate("pages.login.noaccount")} <a href="#" onClick={handleRedirectRegister} className="link">{translate("pages.login.sign")}</a></Typography>
+    </div>
+  );
+};
