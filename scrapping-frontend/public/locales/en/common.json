@@ -1,24 +1,18 @@
 {
   "pages": {
     "login": {
-      "title": "Log into your account",
-      "signin": "Sign in",
-      "signup": "Sign up",
-      "divider": "or",
+      "title": "Log in to your account",
+      "button": "Log in",
+      "buttonLoad": "Loading...",
+      "forgotPassword": "Have you forgotten your password?",
+      "resetPassword": "Reset it here",
+      "noaccount": "You don't have an account?",
+      "sign": "Register here",
+      "divider": "ou",
       "fields": {
-        "email": "Email",
-        "password": "Password"
-      },
-      "errors": {
-        "validEmail": "Invalid email",
-        "requiredEmail": "Email is required",
-        "requiredPassword": "Password is required"
-      },
-      "buttons": {
-        "submit": "Log in",
-        "forgotPassword": "Forgot password?",
-        "noAccount": "Does not have an account yet?",
-        "rememberMe": "Remember me"
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "remembermeLabel": "Remember me"
       }
     },
     "forgotPassword": {
@@ -35,19 +29,15 @@
       }
     },
     "register": {
-      "title": "Sign up for your account",
+      "title": "Register as a user",
+      "registered": "Already have an account?",
+      "connect": "Log in here",
+      "button": "Create Account",
+      "buttonLoad": "Loading...",
       "fields": {
-        "email": "Email",
-        "password": "Password"
-      },
-      "errors": {
-        "validEmail": "Invalid email address",
-        "requiredEmail": "Email is required",
-        "requiredPassword": "Password is required"
-      },
-      "buttons": {
-        "submit": "Register",
-        "haveAccount": "Have an account?"
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "passwordConfirmLabel": "Password Confirmation"
       }
     },
     "updatePassword": {

@@ -230,7 +230,7 @@ export const JobShow = () => {
             <EditButton {...editButtonProps} title={translate("pages.jobs.show.headerButtons.editTooltip")}></EditButton>
           )}
           {
-            (jobData?.state === 'completed' || jobData?.state === 'failed') &&
+            (jobData?.state === 'failed') &&
             (<Button sx={{ display: "flex", gap: .8, alignItems: "center" }} onClick={() => handleRetry(id as number)}><PlayArrow />{translate("pages.jobs.show.headerButtons.launch")}</Button>)
           }
           {deleteButtonProps && (
