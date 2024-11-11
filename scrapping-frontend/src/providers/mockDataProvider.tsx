@@ -103,17 +103,19 @@ export const dataProvider: DataProvider = {
       interface Query {
         [key: string]: string | number | boolean;
       }
-      
+
       let params: string[] = [];
-      for (const [key, value] of Object.entries(query as Query)) {
-        const valueString = value?.toString();
-        params.push(`${key}=${valueString}`);
+      if (query) {
+        for (const [key, value] of Object.entries(query as Query)) {
+          const valueString = value?.toString();
+          params.push(`${key}=${valueString}`);
+        }
       }
 
       const response = await fetch(`${url}?${params.join("&")}`);
 
       if (response.status < 200 || response.status > 299) throw response;
-  
+
       const data = await response.json();
 
       return data;

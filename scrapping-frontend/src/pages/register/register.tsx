@@ -4,6 +4,7 @@ import { useNavigation, useNotification, useTranslation } from "@refinedev/core"
 import { authProvider } from "../../providers/mockAuthProvider";
 import { MouseEventHandler, useState } from "react";
 import { LanguageChange } from "../../components/language";
+import { usePageTitle } from "../../components/title";
 
 interface userData {
   email: string;
@@ -34,19 +35,21 @@ const RegisterForm = () => {
         });
         setTimeout(() => {
           push("/login");
-        }, 3000);
+        }, 1000);
       }
     } catch (error: any) {
       open?.({
         key: "account-create-error",
         type: "error",
-        message: "Erreur lors de la création du compte",
-        description: error.message,
+        message: `Erreur : ${error.message}\nDétails : ${error.stack}`,
+        description: "Erreur lors de la création du compte",
       });
     } finally {
       setIsLoading(false);
     }
   };
+
+  usePageTitle("GMB | Créer un compte");
 
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: "flex", flexDirection: "column", gap: 3, justifyContent: "center", p: "0 40px" }}>
