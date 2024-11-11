@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/gmb/api/(.*)",
+      "source": "/api/(.*)",
       "destination": "http://18.224.252.65/gmb/api/$1"
     }
   ]
