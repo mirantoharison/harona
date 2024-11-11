@@ -33,12 +33,12 @@ import {
   JobEdit,
   JobAdd
 } from "./pages/jobs";
-import {
+/*import {
   SelectorConfigList,
   SelectorShow,
   SelectorAdd,
   SelectorEdit
-} from "./pages/selector";
+} from "./pages/selector";*/
 
 import { ForgotPassword } from "./pages/forgotPassword";
 import { Login } from "./pages/login";
