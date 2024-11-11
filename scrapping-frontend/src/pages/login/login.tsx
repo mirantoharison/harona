@@ -13,7 +13,24 @@ interface userData {
 const LoginForm = () => {
   const { open } = useNotification();
   const { replace } = useNavigation();
-  const { mutateAsync: login, isLoading, } = useLogin<userData>();
+  const { mutateAsync: login, isLoading } = useLogin<userData>({
+    mutationOptions: {
+      onSuccess(data, variables, context) {
+        if (data.success && data.token) {
+          localStorage.setItem("auth_token", data?.token as string);
+          replace("/");
+        }
+        else {
+          open?.({
+            key: "account-login-error",
+            type: "error",
+            message: translate("pages.login.error.credential"),
+            description: translate("pages.login.error.title")
+          });
+        }
+      }
+    }
+  });
   const { register, handleSubmit, formState: { errors }, control, setValue } = useForm<userData>();
   const { translate } = useTranslation();
 
@@ -27,19 +44,9 @@ const LoginForm = () => {
         email: data.email,
         password: data.password,
         save: data.save
-      }).then((data) => {
-        if (data.success && data.token) {
-          localStorage.setItem("auth_token", data?.token as string);
-          replace("/");
-        }
-      });
+      })
     } catch (error: any) {
-      open?.({
-        key: "account-login-error",
-        type: "error",
-        message: "Erreur lors de la connexion au compte",
-        description: error.message,
-      });
+      console.log(error)
     }
   };
 
@@ -53,7 +60,7 @@ const LoginForm = () => {
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ display: "flex", flexDirection: "column", gap: 3, width: "100%", maxWidth: "500px", margin: "0 auto" }}>
+      sx={{ display: "flex", flexDirection: "column", gap: 3, justifyContent: "center", p: "0 40px" }}>
       <TextField
         label={translate("pages.login.fields.emailLabel")}
         variant="standard"
@@ -102,10 +109,10 @@ export const LoginPage = () => {
 
   return (
     <div style={{ width: "40%", minWidth: "400px", maxWidth: "600px", margin: "0 auto", borderRadius: "10px", padding: "50px 0", display: "flex", flexDirection: "column", rowGap: "10px" }}>
-      <Box sx={{display: "flex", justifyContent: "flex-end", mb: 4}}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 4, p: "0 40px" }}>
         <LanguageChange />
       </Box>
-      <Typography variant="h3" fontWeight={"bold"} sx={{ mb: "40px", textAlign: "center" }}>{translate("pages.login.title")}</Typography>
+      <Typography variant="h3" fontWeight={"bold"} sx={{ mb: "40px", textAlign: "center", p: "0 40px" }}>{translate("pages.login.title")}</Typography>
       <LoginForm />
       <Typography variant="body2" sx={{ textAlign: "center", mt: "20px" }}>{translate("pages.login.forgotPassword")} <a href="#" className="link">{translate("pages.login.resetPassword")}</a></Typography>
       <Typography variant="body2" sx={{ textAlign: "center" }}>{translate("pages.login.noaccount")} <a href="#" onClick={handleRedirectRegister} className="link">{translate("pages.login.sign")}</a></Typography>

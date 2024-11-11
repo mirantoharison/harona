@@ -154,10 +154,8 @@ function App() {
                       <Route path="/jobs/update/:id" element={<JobEdit />} />
                       <Route path="/jobs/details/:id" element={<JobShow />} />
                     </Route>
-
                     {
-                      /*
-                      <Route path="/selector">
+                      /*<Route path="/selector">
                         <Route index path="/selector/list" element={<SelectorConfigList />} />
                         <Route path="/selector/add" element={<SelectorAdd />} />
                         <Route path="/selector/details/:id" element={<SelectorShow />} />

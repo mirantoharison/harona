@@ -13,6 +13,10 @@
         "emailLabel": "Email",
         "passwordLabel": "Password",
         "remembermeLabel": "Remember me"
+      },
+      "error": {
+        "title": "Error logging into account.",
+        "credential": "There may be errors in the information you entered."
       }
     },
     "forgotPassword": {

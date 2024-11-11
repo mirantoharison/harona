@@ -15,16 +15,14 @@ export const authProvider: AuthProvider = {
 
     if (response.status < 200 || response.status > 299) throw response;
 
-    if (params.save) localStorage.setItem("auth_save", String(1));
-    else localStorage.removeItem("auth_save");
-
     const data = await response.json();
-
-    return Promise.resolve({ success: true, token: data.token });
+    return data.success === false ?
+      Promise.resolve({ success: false }) :
+      Promise.resolve({ success: true, token: data.token });
   },
   check: async (params) => {
-    const token = localStorage.getItem("auth_token");
-    if (token) {
+    if (localStorage.getItem("auth_token")) {
+      const token = localStorage.getItem("auth_token");
       const response = await fetch(`${API_URL}/account/check?token=${token}`, {
         method: "get",
         headers: {

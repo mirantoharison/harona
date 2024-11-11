@@ -165,12 +165,6 @@ export const JobList = () => {
   const handleSortOrderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSortOrder(Number(event.target.value));
   }
-  const handleScrollToTarget = () => {
-    listWrapperRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
 
   /*const handleExportOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -198,10 +192,6 @@ export const JobList = () => {
       setShouldExport(false);
     }
   }, [shouldExport, isSuccess]);*/
-
-  useEffect(() => {
-    handleScrollToTarget();
-  }, [page]);
 
   useEffect(() => {
     if (searchInputRef.current) {
@@ -361,11 +351,11 @@ export const JobList = () => {
                   {
                     data?.data.map((task, id) => (
                       <Grid item sm={12} md={6} lg={4} xl={3} key={id} sx={{ width: "100%" }}>
-                        <TaskCard 
-                        recordId={Number(task.id) ?? 0} 
-                        task={task as TaskProps} 
-                        canEdit={task.state !== "completed" && task.state !== "active"} 
-                        canDelete={task.state !== "active"} />
+                        <TaskCard
+                          recordId={Number(task.id) ?? 0}
+                          task={task as TaskProps}
+                          canEdit={task.state !== "completed" && task.state !== "active"}
+                          canDelete={task.state !== "active"} />
                       </Grid>
                     ))
                   }
