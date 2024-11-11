@@ -3,11 +3,11 @@ import { Controller, useForm } from "react-hook-form";
 import { useLogin, useNavigation, useNotification, useTranslation } from "@refinedev/core";
 import { MouseEventHandler, useEffect } from "react";
 import { LanguageChange } from "../../components/language";
+import { usePageTitle } from "../../components/title";
 
 interface userData {
   email: string;
   password: string;
-  save: boolean;
 }
 
 const LoginForm = () => {
@@ -28,13 +28,18 @@ const LoginForm = () => {
             description: translate("pages.login.error.title")
           });
         }
+      },
+      onError(error) {
+        open?.({
+          type: "error",
+          message: `Erreur : ${error?.message}\nDetails : ${error?.stack}` || 'An unexpected error occurred.',
+          description: 'Login Failed',
+        });
       }
     }
   });
   const { register, handleSubmit, formState: { errors }, control, setValue } = useForm<userData>();
   const { translate } = useTranslation();
-
-  const savedEmail = localStorage.getItem("auth_usermail");
 
   const onSubmit = async (data: userData, event?: React.BaseSyntheticEvent) => {
     event?.preventDefault();
@@ -42,19 +47,14 @@ const LoginForm = () => {
       // Appel de la logique de connexion après validation
       login({
         email: data.email,
-        password: data.password,
-        save: data.save
+        password: data.password
       })
     } catch (error: any) {
       console.log(error)
     }
   };
 
-  useEffect(() => {
-    if (savedEmail) {
-      setValue("email", savedEmail);
-    }
-  }, [savedEmail]);
+  usePageTitle("GMB | Se connecter");
 
   return (
     <Box
@@ -79,17 +79,6 @@ const LoginForm = () => {
         error={!!errors.password}
         helperText={errors.password?.message}
         className="custom-input"
-      />
-      <Controller
-        name="save"
-        control={control}
-        render={({ field }) => (
-          <FormControlLabel
-            sx={{ alignItems: "center" }}
-            control={<Checkbox {...field} />}
-            label={(<Typography variant="body2">{translate("pages.login.fields.remembermeLabel")}</Typography>)}
-          />
-        )}
       />
       <Button type="submit" variant="contained" disabled={isLoading}>
         {isLoading ? translate("pages.login.buttonLoad") : translate("pages.login.button")}

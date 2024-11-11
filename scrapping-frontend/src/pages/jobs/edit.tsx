@@ -4,10 +4,11 @@ import { DeleteButton, Edit, ListButton, RefreshButton, SaveButton } from "@refi
 import { Typography, Button, Grid, TextField, Box } from "@mui/material";
 import { useForm } from "@refinedev/react-hook-form";
 import { type HttpError, useNavigation, useTranslation } from "@refinedev/core";
+import { usePageTitle } from "../../components/title";
 
 interface JobProps {
+  url: string;
   name: string;
-  data: { url: string, name: string };
   comments?: string;
   timestamp: string;
   processedOn?: string;
@@ -46,6 +47,7 @@ export const JobEdit = () => {
     },
   });
 
+  
   const { mutate: deleteJob, isSuccess } = useDelete();
 
   const deleteItem = (id: number) => {
@@ -59,25 +61,35 @@ export const JobEdit = () => {
     push("/jobs/list");
   }
 
-  useEffect(() => {
-    if (data === null) {
-      const task = query?.data?.data;
-      if (task) {
-        const formFields = ["data", "name", "comments"];
-        formFields.forEach((field) => {
-          const typedKey = field as keyof JobProps;
-          setValue(typedKey, task.job[typedKey]);
-        });
-        setData(task);
-      }
+  /*useEffect(() => {
+    const task = query?.data?.data;
+    
+    if (data === null && task) {
+      setData(task);
     }
-  }, [query, setValue]);
+
+    if (task) {
+      const formFields = ["data", "name", "comments"];
+      formFields.forEach((field) => {
+        const typedKey = field as keyof JobProps;
+        if(typedKey === "data"){
+          setValue("data.url", task.job["data"].url);
+          setValue("data.name", task.job["data"].name);
+        }
+        else{
+          setValue(typedKey, task.job[typedKey]);
+        }
+      });
+    }
+  }, [query?.data, setValue]);*/
 
   useEffect(() => {
     if (isSuccess) {
       push("/jobs/list");
     }
   }, [isSuccess]);
+
+  usePageTitle(`GMB | Modification de la tâche ${id}`);
 
   return (
     <Edit
@@ -114,7 +126,7 @@ export const JobEdit = () => {
       >
         <Grid item sm={12} md={6} sx={{ width: "100%" }}>
           <TextField
-            {...register("data.name", {
+            {...register("name", {
               required: translate("input.required"),
             })}
             variant="standard"
@@ -129,10 +141,16 @@ export const JobEdit = () => {
             className="custom-input"
           />
           <TextField
-            {...register("data.url", { required: true })}
+            {...register("url", {
+              required: true,
+              pattern: {
+                value: /^https?:\/\/(www\.)?(google\.(com|[a-z]{2})(\.[a-z]{2})?\/maps|maps\.app\.goo\.gl)\/[^\s]+$/,
+                message: translate("input.url"),
+              },
+            })}
             variant="standard"
-            error={!!errors?.data?.url}
-            helperText={<>{errors?.data?.url?.message ?? ""}</>}
+            error={!!errors?.url}
+            helperText={<>{errors?.url?.message ?? ""}</>}
             margin="normal"
             fullWidth
             InputLabelProps={{ shrink: true }}

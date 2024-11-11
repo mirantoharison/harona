@@ -5,6 +5,7 @@ import { CircularProgress, Box, Typography, Button, Grid, Select, MenuItem, Pagi
 import { useCustom, useList, useTranslation } from "@refinedev/core";
 import { StateCell } from "../../components";
 import { dataProvider } from "../../providers/mockDataProvider";
+import { usePageTitle } from "../../components/title";
 
 interface TaskProps {
   id: number;
@@ -26,6 +27,10 @@ interface TaskCardProps {
   task: TaskProps,
   canEdit: boolean;
   canDelete: boolean;
+}
+
+interface WorkerState {
+  running: boolean;
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ recordId, task, style, canEdit = false, canDelete = false }) => {
@@ -74,6 +79,8 @@ export const JobList = () => {
   const [sort, setSort] = useState("id");
   const [sortOrder, setSortOrder] = useState(-1);
   const [search, setSearch] = useState("");
+  const [workerActive, setWorkerActive] = useState(false);
+  const [startWorker, setStartWorker] = useState(false);
   const [shouldExport, setShouldExport] = useState(false);
   const [exportAnchorEl, setExportAnchorEl] = useState(null);
   const [exportType, setExportType] = useState("");
@@ -82,9 +89,11 @@ export const JobList = () => {
   const { translate } = useTranslation();
   const { data, isLoading, refetch } = useList({
     errorNotification: (error, values, resource) => {
-      console.log(error);
       return {
-        message: translate("pages.error.listMessage"),
+        message: translate("pages.error.listMessage", {
+          error: error?.message,
+          stack: error?.stack
+        }),
         description: translate("pages.error.listDescription"),
         type: "error",
       };
@@ -121,6 +130,22 @@ export const JobList = () => {
       enabled: shouldExport,
     },
   });*/
+
+  const { data: checkWorkerState, isLoading: isCheckWorkerLoading, isFetched, isSuccess, refetch: refetchWorkerState } = useCustom<WorkerState>({
+    url: `${dataProvider.getApiUrl()}/jobs/check`,
+    method: "get",
+    queryOptions: {
+      enabled: true,
+    },
+  });
+
+  const { data: startWorkerState, isLoading: isStartWorkerLoading, isFetched: startFetched, isSuccess: isStartSuccess } = useCustom({
+    url: `${dataProvider.getApiUrl()}/jobs/start`,
+    method: "get",
+    queryOptions: {
+      enabled: startWorker,
+    },
+  });
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
   const listWrapperRef = useRef<HTMLDivElement>(null);
@@ -166,6 +191,11 @@ export const JobList = () => {
     setSortOrder(Number(event.target.value));
   }
 
+  const handleWorkerStart = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.currentTarget.disabled = true;
+    setStartWorker(true);
+  }
+
   /*const handleExportOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     if (event.currentTarget.parentElement) {
@@ -205,6 +235,21 @@ export const JobList = () => {
     }
   }, [isLoading, data]);
 
+  useEffect(() => {
+    if (
+      checkWorkerState?.data?.running !== workerActive &&
+      checkWorkerState?.data?.running
+    ) {
+      setWorkerActive(true);
+    }
+  }, [checkWorkerState]);
+
+  useEffect(() => {
+    if (startFetched) refetchWorkerState();
+  }, [startFetched])
+
+  usePageTitle("GMB | Liste des tâches");
+
   return (
     <>
       <List
@@ -216,6 +261,7 @@ export const JobList = () => {
         }
         headerButtons={({ defaultButtons }) => (
           <>
+            {(checkWorkerState?.data?.running === false) && (<Button onClick={handleWorkerStart}>Démarrer le worker</Button>)}
             <RefreshButton
               onClick={handleRefresh}
               sx={{ display: "flex", alignItems: "center", minWidth: "auto" }}

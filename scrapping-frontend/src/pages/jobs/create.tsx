@@ -4,6 +4,7 @@ import { Box, Typography, Button, Grid, MenuItem, TextField, Switch, IconButton 
 import { Create } from "@refinedev/mui";
 import { type HttpError, useNavigation, useTranslation } from "@refinedev/core";
 import { useForm } from "@refinedev/react-hook-form";
+import { usePageTitle } from "../../components/title";
 
 interface JobProps {
   name: string;
@@ -34,7 +35,7 @@ export const JobAdd = () => {
       onMutationSuccess(data, variables, context, isAutoSave) {
         setTimeout(() => {
           push("/jobs/list");
-        }, 3000)
+        }, 1000)
       },
     },
   });
@@ -42,6 +43,8 @@ export const JobAdd = () => {
   const cancel = () => {
     push("/jobs/list");
   }
+
+  usePageTitle("GMB | Ajouter une nouvelle tâche");
 
   return (
     <Create

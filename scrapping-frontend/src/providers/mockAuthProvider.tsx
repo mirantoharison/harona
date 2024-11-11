@@ -33,9 +33,13 @@ export const authProvider: AuthProvider = {
       if (response.status < 200 || response.status > 299) throw response;
 
       const data = await response.json();
-      localStorage.setItem("auth_usermail", data.email);
-
-      return { authenticated: true };
+      if (data.ok) {
+        localStorage.setItem("auth_usermail", data.email);
+        return { authenticated: true };
+      }
+      else {
+        return { authenticated: false };
+      }
     }
 
     return {

@@ -64,7 +64,7 @@
       "404": "Désolé, la page que vous avez visitée n'existe pas.",
       "resource404": "Êtes-vous sûr d'avoir créé la ressource {{resource}} ?",
       "backHome": "Retour à l'accueil",
-      "listMessage": "Nous avons rencontré un problème lors du chargement des données. Nous vous invitons à réessayer plus tard",
+      "listMessage": "Nous avons rencontré un problème lors du chargement des données. Nous vous invitons à réessayer plus tard. Erreur : {{error}}. Détails : {{stack}}",
       "listDescription": "Oops ...",
       "retryMessage": "Nous n'avons pas pu redémarrer la tâche",
       "retryDescription": "Action interrompue"
