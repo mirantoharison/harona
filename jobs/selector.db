@@ -1,9 +1,0 @@
-{"name":"eco_collaborative","selector":"button#fr-home-index-companies-tabs-3","_id":"1srIB0M2naZpL6iXV"}
-{"name":"offers_link","selector":"a","attrText":"href","parentId":"1srIBpM2nakpL6iXV","_id":"1srIBp12nakpA6iXV"}
-{"name":"explore_link","selector":"div[data-testid='home-section-companies-tabs'] > div > div:last-child > a","_id":"1srIBpM2naZpL6iXV"}
-{"name":"offers_title","selector":"span[data-testid='company-card-title']","text":true,"parentId":"1srIBpM2nakpL6iXV","_id":"1srIBpM2nakpA6iXV"}
-{"name":"offers_card","selector":"article[data-role='companies:thumb']","array":true,"parentId":"1srIBuM2naZpL6iXV","_id":"1srIBpM2nakpL6iXV"}
-{"name":"offers_sector","selector":"ul[data-testid='company-card-meta-info'] span[aria-label=Secteurs]+span","text":true,"parentId":"1srIBpM2nakpL6iXV","_id":"1srIBpM2nrkpL6iXV"}
-{"name":"offers_collaborator","selector":"ul[data-testid='company-card-meta-info'] span[aria-label=Collaborateurs]+span","text":true,"parentId":"1srIBpM2nakpL6iXV","_id":"1srIBsM2nrkpL6iXV"}
-{"name":"offer","_id":"1srIBuM2naZpL6iXV"}
-{"name":"offers_post","selector":"footer a","text":true,"parentId":"1srIBpM2nakpL6iXV","_id":"1yrIBsM2nrkpL6iXV"}

@@ -49,7 +49,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: "flex", flexDirection: "column", gap: 3, width: "100%", maxWidth: "500px", margin: "0 auto" }}>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: "flex", flexDirection: "column", gap: 3, justifyContent: "center", p: "0 40px" }}>
       <TextField
         label={translate("pages.register.fields.emailLabel")}
         variant="standard"
@@ -100,10 +100,10 @@ export const RegisterPage = () => {
 
   return (
     <div style={{ width: "40%", minWidth: "400px", maxWidth: "600px", margin: "0 auto", borderRadius: "10px", padding: "50px 0" }}>
-      <Box sx={{display: "flex", justifyContent: "flex-end", mb: 4}}>
+      <Box sx={{display: "flex", justifyContent: "flex-end", mb: 4, p: "0 40px"}}>
         <LanguageChange />
       </Box>
-      <Typography variant="h3" fontWeight={"bold"} sx={{ mb: "40px", textAlign: "center" }}>{translate("pages.register.title")}</Typography>
+      <Typography variant="h3" fontWeight={"bold"} sx={{ mb: "40px", textAlign: "center", p: "0 40px" }}>{translate("pages.register.title")}</Typography>
       <RegisterForm />
       <Typography variant="body2" sx={{ textAlign: "center", mt: "20px" }}>{translate("pages.register.registered")} <a href="#" onClick={handleRedirectLogin} className="link">{translate("pages.register.connect")}</a></Typography>
     </div>

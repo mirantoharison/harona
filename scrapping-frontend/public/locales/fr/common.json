@@ -13,6 +13,10 @@
         "emailLabel": "Adresse de messagerie",
         "passwordLabel": "Mot de passe",
         "remembermeLabel": "Se souvenir de moi"
+      },
+      "error": {
+        "title": "Erreur lors de la connexion au compte.",
+        "credential": "Il se peut que les informations que vous avez saisies comportes des erreurs"
       }
     },
     "forgotPassword": {
