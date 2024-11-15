@@ -27,12 +27,8 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom
 import { authProvider } from "./authProvider";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
-import {
-  JobList,
-  JobShow,
-  JobEdit,
-  JobAdd
-} from "./pages/jobs";
+import { JobList, JobShow, JobEdit, JobAdd } from "./pages/jobs";
+import { EstablishmentList, EstablishmentCreate, EstablishmentEdit, EstablishmentShow } from "./pages/establishment";
 /*import {
   SelectorConfigList,
   SelectorShow,
@@ -47,7 +43,7 @@ import { RegisterPage } from "./pages/register/register";
 import { LoginPage } from "./pages/login/login";
 import { authProvider as customAuthProvider } from "./providers/mockAuthProvider";
 
-import { Settings, Google, Queue } from "@mui/icons-material";
+import { Settings, Google, Queue, Store } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 
 function App() {
@@ -89,6 +85,14 @@ function App() {
                     meta: {
                       canDelete: true,
                     },
+                  },
+                  {
+                    name: "etablissement",
+                    list: "/establishment/list",
+                    create: "/establishment/add",
+                    edit: "/establishment/update/:id",
+                    show: "/establishment/details/:id",
+                    icon: (<Store/>)
                   },
                   /*{
                     name: i18nProvider.translate("menu.selector"),
@@ -153,6 +157,12 @@ function App() {
                       <Route path="/jobs/add" element={<JobAdd />} />
                       <Route path="/jobs/update/:id" element={<JobEdit />} />
                       <Route path="/jobs/details/:id" element={<JobShow />} />
+                    </Route>
+                    <Route path="/establishment">
+                      <Route index path="/establishment/list" element={<EstablishmentList />} />
+                      <Route path="/establishment/add" element={<EstablishmentCreate />} />
+                      <Route path="/establishment/update/:id" element={<EstablishmentEdit />} />
+                      <Route path="/establishment/details/:id" element={<EstablishmentShow />} />
                     </Route>
                     {
                       /*<Route path="/selector">

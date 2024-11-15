@@ -31,6 +31,7 @@ export const dataProvider: DataProvider = {
     return { data };
   },
   getList: async ({ resource, pagination, filters, sorters, meta }) => {
+    console.log("fileter", filters)
     try {
       const params = new URLSearchParams();
       const current = pagination?.current ?? 1;
@@ -62,6 +63,7 @@ export const dataProvider: DataProvider = {
     }
   },
   create: async ({ resource, variables }) => {
+    console.log("CREATE")
     const response = await fetch(`${API_URL}/${resource}/add`, {
       method: "post",
       body: JSON.stringify(variables),

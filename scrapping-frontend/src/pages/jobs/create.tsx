@@ -99,7 +99,7 @@ export const JobAdd = () => {
             {...register("url", {
               required: true,
               pattern: {
-                value: /^https?:\/\/(www\.)?(google\.(com|[a-z]{2})(\.[a-z]{2})?\/maps|maps\.app\.goo\.gl)\/[^\s]+$/,
+                value: /^https:\/\/(?:www\.google\.com\/maps\/place\/[a-zA-Z0-9\s%\-]+(?:\/@([0-9\-\.]+,[0-9\-\.]+,([0-9]+)z)?)?(?:\/[^\s?]+)?(?:\?[\w&=%\-]+)?|maps\.google\.com\/\?cid=[0-9]+|maps\.app\.goo\.gl\/[a-zA-Z0-9]+)/,
                 message: translate("input.url"),
               },
             })}
