@@ -130,6 +130,7 @@ export const JobShow = () => {
   const jobResultData = data?.data?.job.returnvalue;
   const companyInfo = jobResultData?.companyInfo;
 
+  console.log(jobData)
   const { data: reviewData, isLoading: reviewLoading, isError: reviewError, isFetching: reviewFetching, refetch: refetchReview } = useList({
     resource: "reviews",
     pagination: {
@@ -202,13 +203,6 @@ export const JobShow = () => {
           margin: 0
         },
       }}
-      wrapperProps={{
-        sx: {
-          ".MuiCardHeader-action": {
-            width: "100%"
-          }
-        }
-      }}
       contentProps={{
         sx: {
           padding: "0",
@@ -274,6 +268,7 @@ export const JobShow = () => {
                   <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.name"), value: companyInfo.title }} />
                   <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.type"), value: companyInfo.businessType }} />
                   <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.address"), value: companyInfo.address }} />
+                  <TaskDetailContitionalField field={{ label: "Latitude et longitude" as string, value: jobData.latlong }} style={{ flexDirection: "column" }} />
                   <TaskDetailContitionalField field={{ label: translate("pages.jobs.show.tab.details.plusCode"), value: companyInfo.plusCode }} />
                   <TaskDetailContitionalField field={{
                     label: translate("pages.jobs.show.tab.details.website"), value: (

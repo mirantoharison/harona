@@ -1,25 +1,19 @@
 import { useEffect, useState } from "react";
-import { useDelete, useParsed } from "@refinedev/core";
+import { useCustom, useDelete, useParsed } from "@refinedev/core";
 import { DeleteButton, Edit, ListButton, RefreshButton, SaveButton } from "@refinedev/mui";
-import { Typography, Button, Grid, TextField, Box } from "@mui/material";
+import { Typography, Button, Grid, TextField, Box, TextFieldProps } from "@mui/material";
 import { useForm } from "@refinedev/react-hook-form";
 import { type HttpError, useNavigation, useTranslation } from "@refinedev/core";
 import { usePageTitle } from "../../components/title";
 
-interface JobProps {
-  url: string;
-  name: string;
-  comments?: string;
-  timestamp: string;
-  processedOn?: string;
-}
-
-interface JobDetailsProps {
-  job: JobProps;
-}
+import { JobDetailsProps, JobProps } from "../../interfaces/jobs";
+import { dataProvider } from "../../providers/mockDataProvider";
 
 export const JobEdit = () => {
   const [data, setData] = useState<null | JobDetailsProps>(null);
+  const [shouldRetry, setShouldRetry] = useState(false);
+  const [retried, setRetried] = useState(false);
+
   const { translate } = useTranslation();
   const { push } = useNavigation();
   const { id } = useParsed();
@@ -30,7 +24,7 @@ export const JobEdit = () => {
     register,
     saveButtonProps,
     formState: { errors },
-    setValue,
+    setValue
   } = useForm<JobDetailsProps, HttpError, JobProps>({
     refineCoreProps: {
       resource: "jobs",
@@ -47,8 +41,32 @@ export const JobEdit = () => {
     },
   });
 
-  
   const { mutate: deleteJob, isSuccess } = useDelete();
+
+  const { data: retryData, isLoading: retryIsLoading, isFetching: retryIsFetching, isSuccess: retryIsSuccess } = useCustom({
+    url: `${dataProvider.getApiUrl()}/jobs/retry`,
+    method: "get",
+    config: {
+      query: { id }
+    },
+    queryOptions: {
+      enabled: shouldRetry,
+    },
+  });
+
+  const commonTextFieldProps: TextFieldProps = {
+    variant: "standard",
+    margin: "normal",
+    fullWidth: true,
+    InputLabelProps: { shrink: true },
+    className: "custom-input",
+  };
+
+  const validationMessages = {
+    required: translate("input.required"),
+    url: translate("input.url"),
+  };
+
 
   const deleteItem = (id: number) => {
     deleteJob({
@@ -61,33 +79,32 @@ export const JobEdit = () => {
     push("/jobs/list");
   }
 
-  /*useEffect(() => {
-    const task = query?.data?.data;
-    
-    if (data === null && task) {
-      setData(task);
-    }
+  const handleRetry = () => {
+    setShouldRetry(true);
+  }
 
+  useEffect(() => {
+    const task = query?.data?.data;
     if (task) {
-      const formFields = ["data", "name", "comments"];
-      formFields.forEach((field) => {
-        const typedKey = field as keyof JobProps;
-        if(typedKey === "data"){
-          setValue("data.url", task.job["data"].url);
-          setValue("data.name", task.job["data"].name);
-        }
-        else{
-          setValue(typedKey, task.job[typedKey]);
-        }
-      });
+      if (!data && JSON.stringify(task) !== JSON.stringify(data)) {
+        setData(task);
+      }
+      setValue("name", task.job.data.name);
+      setValue("url", task.job.data.url);
     }
-  }, [query?.data, setValue]);*/
+  }, [query?.data, setValue]);
 
   useEffect(() => {
     if (isSuccess) {
       push("/jobs/list");
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    if (retryData?.data?.restart) {
+      setRetried(true);
+    }
+  }, [retryData]);
 
   usePageTitle(`GMB | Modification de la tâche ${id}`);
 
@@ -105,6 +122,7 @@ export const JobEdit = () => {
       }}
       headerButtons={({ listButtonProps, refreshButtonProps }) => (
         <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap", rowGap: "10px", columnGap: "10px" }}>
+          {(!retried && (data?.job.state === "failed")) && (<Button onClick={handleRetry} disabled={retryIsFetching}>Réessayer</Button>)}
           <ListButton {...listButtonProps}>{translate("pages.jobs.edit.headerButtons.list")}</ListButton>
           <RefreshButton {...refreshButtonProps} onClick={() => query?.refetch()}>{translate("pages.jobs.edit.headerButtons.refresh")}</RefreshButton>
           <DeleteButton recordItemId={id} resource={"jobs"} onClick={() => deleteItem(id as number)}>{translate("pages.jobs.edit.headerButtons.delete")}</DeleteButton>
@@ -126,60 +144,42 @@ export const JobEdit = () => {
       >
         <Grid item sm={12} md={6} sx={{ width: "100%" }}>
           <TextField
-            {...register("name", {
-              required: translate("input.required"),
-            })}
-            variant="standard"
+            {...register("name", { required: validationMessages.required, })}
+            {...commonTextFieldProps}
             error={!!errors?.name}
             helperText={<>{errors?.name?.message}</>}
-            margin="normal"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
             type="text"
             label={translate("pages.jobs.create.nameInputLabel")}
             name="name"
-            className="custom-input"
           />
           <TextField
             {...register("url", {
               required: true,
               pattern: {
                 value: /^https?:\/\/(www\.)?(google\.(com|[a-z]{2})(\.[a-z]{2})?\/maps|maps\.app\.goo\.gl)\/[^\s]+$/,
-                message: translate("input.url"),
+                message: validationMessages.url,
               },
             })}
-            variant="standard"
+            {...commonTextFieldProps}
             error={!!errors?.url}
             helperText={<>{errors?.url?.message ?? ""}</>}
-            margin="normal"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
             type="text"
             label={translate("pages.jobs.create.urlInputLabel")}
             name="url"
-            className="custom-input"
           />
           <TextField
-            variant="standard"
-            margin="normal"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
+            {...commonTextFieldProps}
             type="text"
             label={translate("pages.jobs.create.createdOn")}
             name="timestamp"
-            className="custom-input"
             InputProps={{ readOnly: true }}
             value={data?.job?.timestamp ?? ""}
           />
           <TextField
-            variant="standard"
-            margin="normal"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
+            {...commonTextFieldProps}
             type="text"
             label={translate("pages.jobs.create.processedOn")}
             name="processedOn"
-            className="custom-input"
             InputProps={{ readOnly: true }}
             value={data?.job?.processedOn ?? ""}
           />
@@ -187,16 +187,12 @@ export const JobEdit = () => {
         <Grid item sm={12} md={6} sx={{ width: "100%" }}>
           <TextField
             {...register("comments")}
-            variant="standard"
+            {...commonTextFieldProps}
             error={!!errors?.comments}
             helperText={<>{errors?.comments?.message}</>}
-            margin="normal"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
             type="text"
             label={translate("pages.jobs.create.commentInputLabel")}
             name="comments"
-            className="custom-input"
             multiline={true}
             placeholder={translate("pages.jobs.create.commentInputPlaceholder")}
           />

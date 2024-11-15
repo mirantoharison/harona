@@ -296,6 +296,62 @@
         "number": "Premier nombre",
         "json": "JSON"
       }
+    },
+    "establishment": {
+      "create": {
+        "title": "Ajouter une nouvelle entreprise",
+        "headerButtons": {
+          "list": "Liste des entreprise"
+        },
+        "fields": {
+          "name": "Nom de l'entreprise",
+          "url": "URL Google maps",
+          "description": "Description",
+          "number_of_reviews": "Nombre d'avis",
+          "formatted_address": "Adresse formaté",
+          "lat": "Latitude",
+          "long": "Longitude",
+          "place_id": "ID google maps",
+          "plus_code": "Plus code",
+          "rating": "Note",
+          "types": "Catégorie principale",
+          "website": "Site web",
+          "is_establishment_found": "Etablissement trouvé",
+          "postal_code": "Code postal",
+          "address_1": "Ligne d'adresse",
+          "categories": "Catégories",
+          "about": "A propos",
+          "search_key": "Clé de recherche sur Google maps",
+          "country": "Pays",
+          "phone": "Téléphone",
+          "town": "Ville",
+          "area": "Zone",
+          "establishment_identifier": "Identification"
+        },
+        "stepper": {
+          "coord": "Coordonnées",
+          "details": "Détails de l'entreprise",
+          "moreDetails": "Informations supplémentaires"
+        },
+        "buttons": {
+          "prev": "Retour",
+          "next": "Suivant",
+          "save": "Enregistrer"
+        }
+      },
+      "edit": {
+        "title": "Modifier l'établissement : {{id}}",
+        "headerButtons": {
+          "refresh": "Rafraichir",
+          "cancel": "Annuler"
+        }
+      },
+      "show": {
+        "title": "Détails sur l'établissement : {{id}}",
+        "headerButtons": {
+          "list": "Liste des pages"
+        }
+      }
     }
   },
   "actions": {
@@ -311,7 +367,7 @@
     "delete": "Supprimer",
     "edit": "Modifier",
     "cancel": "Annuler",
-    "confirm": "Etes+vous sur ?",
+    "confirm": "Etes-vous sûr de vouloir supprimé cet enregistrement ?",
     "filter": "Filtrer",
     "clear": "Effacer",
     "refresh": "Rafraichir",
@@ -323,18 +379,18 @@
   },
   "warnWhenUnsavedChanges": "Are you sure you want to leave? You have unsaved changes.",
   "notifications": {
-    "success": "Successful",
-    "error": "Error (status code: {{statusCode}})",
-    "undoable": "You have {{seconds}} seconds to undo",
-    "createSuccess": "Successfully created {{resource}}",
-    "createError": "There was an error creating {{resource}} (status code: {{statusCode}})",
-    "deleteSuccess": "Successfully deleted {{resource}}",
-    "deleteError": "Error when deleting {{resource}} (status code: {{statusCode}})",
-    "editSuccess": "Successfully edited {{resource}}",
-    "editError": "Error when editing {{resource}} (status code: {{statusCode}})",
-    "importProgress": "Importing: {{processed}}/{{total}}"
+    "success": "Réussite",
+    "error": "Erreur (status code: {{statusCode}})",
+    "undoable": "Vous avez {{seconds}} second pour annuler l'action",
+    "createSuccess": "Un entrée pour {{resource}} a été correctement ajoutée",
+    "createError": "Nous avons rencontré une erreur lors de l'ajout d'une nouvelle entrée pour {{resource}} (status code: {{statusCode}})",
+    "deleteSuccess": "{{resource}} supprimé correctement",
+    "deleteError": "Nous avons rencontré une erreur lors de la suppression d'une entrée pour {{resource}} (status code: {{statusCode}})",
+    "editSuccess": "{{resource}} a été modifié",
+    "editError": "Nous avons rencontré une erreur lors de la modification d'une entrée pour {{resource}} (status code: {{statusCode}})",
+    "importProgress": "Importation en cours : {{processed}}/{{total}}"
   },
-  "loading": "Loading",
+  "loading": "Chargement en cours...",
   "tags": {
     "clone": "Clone"
   },
@@ -344,38 +400,31 @@
   "table": {
     "actions": "Actions"
   },
-  "documentTitle": {
-    "default": "refine",
-    "suffix": " | Refine",
-    "post": {
-      "list": "Posts | Refine",
-      "show": "#{{id}} Show Post | Refine",
-      "edit": "#{{id}} Edit Post | Refine",
-      "create": "Create new Post | Refine",
-      "clone": "#{{id}} Clone Post | Refine"
-    }
-  },
   "autoSave": {
     "success": "saved",
     "error": "auto save failure",
     "loading": "saving...",
     "idle": "waiting for changes"
   },
-  "test": {
-    "textDummy": "voici"
-  },
   "menu": {
     "task": "Tâches",
     "selector": "Sélecteurs",
+    "establishment": "Etablissement",
     "queue": "Fil d'attente"
   },
   "input": {
     "required": "Ce champs est obligatoire",
+    "requiredSpecified": "Le champs \"{{name}}\" ne peux pas être vide",
     "url": "Entrez un URL valide",
     "password": "Le mot de passe est requis",
     "passwordConfirm": "La confirmation du mot de passe est requise",
     "passwordDifferent": "Les mots de passe ne correspondent pas",
     "email": "L'email est requis",
     "emailValid": "Entrez une adresse Email invalide"
+  },
+  "resources": {
+    "common": {
+      "noData": "Aucune donnée disponible"
+    }
   }
 }

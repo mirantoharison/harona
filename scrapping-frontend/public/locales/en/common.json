@@ -294,6 +294,61 @@
         "number": "First number",
         "json": "JSON"
       }
+    },
+    "establishment": {
+      "create": {
+        "title": "Add a new company",
+        "headerButtons": {
+          "list": "List of companies"
+        },
+        "fields": {
+          "name": "Company Name",
+          "url": "Google maps URL",
+          "description": "Description",
+          "number_of_reviews": "Number of reviews",
+          "formatted_address": "Formatted address",
+          "lat": "Latitude",
+          "long": "Longitude",
+          "place_id": "Google maps ID",
+          "plus_code": "Plus code",
+          "rating": "Rating",
+          "types": "Main category",
+          "website": "Website",
+          "is_establishment_found": "Establishment found",
+          "postal_code": "Postcode",
+          "address_1": "Address line",
+          "categories": "Categories",
+          "about": "About",
+          "search_key": "Search key on Google maps",
+          "country": "Country",
+          "phone": "Phone",
+          "town": "Town",
+          "area": "Area",
+          "establishment_identifier": "Establishment identifier"
+        },
+        "stepper": {
+          "coord": "Geographic coordinates",
+          "details": "Company Details",
+          "moreDetails": "Additional information"
+        },
+        "buttons": {
+          "prev": "Back",
+          "next": "Next",
+          "save": "Save"
+        }
+      },
+      "edit": {
+        "title": "Edit establishment: {{id}}",
+        "headerButtons": {
+          "refresh": "Refresh"
+        }
+      },
+      "show": {
+        "title": "Company Details: {{id}}",
+        "headerButtons": {
+          "list": "List of pagess"
+        }
+      }
     }
   },
   "actions": {
